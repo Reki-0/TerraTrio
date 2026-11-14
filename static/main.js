@@ -1,3 +1,4 @@
+const STORAGE_KEY = 'planetPoints_v2'
 const LOCATIONS = {
     "earth": [
         { name: "Warsaw",       lat: 52.23, lon: 21.01,   info: "Capital of Poland", category: "bases" },
