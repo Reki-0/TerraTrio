@@ -137,7 +137,7 @@ function toggleRotation() {
 // --- PRECISE GEO-COORDINATES & SAVED POINTS LOGIC ---
 const LONGITUDE_OFFSET = 0; 
 let savedPoints = [];
-const STORAGE_KEY = 'planetPoints_v2';
+const STORAGE_KEY = 'planetPoints_v1';
 
 function bodyLabel(planetName) {
     if (planetName === 'mars') return 'Mars Analogue';
