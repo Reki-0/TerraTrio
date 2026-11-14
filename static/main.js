@@ -1,7 +1,7 @@
-const STORAGE_KEY = 'planetPoints_v2'
+
 const LOCATIONS = {
     "earth": [
-        { name: "Tellnes Ilmenite Deposit",       lat: 58.20, lon: 6.25,   info: "", category: "" },
+        { name: "Tellnes Ilmenite Deposit",       lat: 58.20, lon: 6.25,   info: "y", category: "y" },
         { name: "Mauna Kea",    lat: 19.82, lon: -155.47, info: "Volcano in Hawaii", category: "volcanoes" },
         { name: "Atacama",      lat: -24.5, lon: -69.25,  info: "Driest desert",     category: "terrain" }
     ],
