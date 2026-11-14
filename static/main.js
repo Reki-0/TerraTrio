@@ -121,10 +121,8 @@ function changePlanet(planetName) {
     console.log(`Loaded points for ${planetName}:`, currentData);
 }
 
-// Category selection handler from left sidebar
-function selectCategory(categoryName) {
-    console.log("Selected category:", categoryName);
-}
+
+
 
 // Rotation state variable
 let isRotating = true;
@@ -409,6 +407,97 @@ function renderSavedPoints() {
             listContainer.appendChild(li);
         });
 }
+// --- INTERACTIVE CATALOG ---
+const CATALOG = [
+    { name: 'Soil',                  children: ['Basaltic', 'Clay-rich', 'Sandy', 'Salt-rich'] },
+    { name: 'Terrain Type',          children: ['Volcanic', 'Desert', 'Polar', 'Basin', 'Canyon'] },
+    { name: 'Temperature',           children: ['Below -50°C', '-50 to 0°C', '0 to 25°C', 'Above 25°C'] },
+    { name: 'Wind and Dust',         children: ['Calm', 'Moderate', 'Strong', 'Dust storms'] },
+    { name: 'Water-Based Resources', children: ['Ice', 'Brines', 'Hydrated minerals', 'Groundwater'] },
+    { name: 'Biology',               children: ['Extremophiles', 'Microbial mats', 'Lichens'] },
+    { name: 'Subsurface structures', children: ['Lava tubes', 'Caves', 'Aquifers'] }
+];
+
+const selectedSubs = new Set();      // wybrane podkategorie, klucze "Kategoria::Podkategoria"
+const openCategories = new Set();    // rozwinięte kategorie
+
+function catalogKey(cat, sub) {
+    return cat + '::' + sub;
+}
+
+function renderCatalog() {
+    const root = document.getElementById('catalog');
+    root.innerHTML = '';
+
+    CATALOG.forEach(cat => {
+        const isOpen = openCategories.has(cat.name);
+        const selectedCount = cat.children.filter(s => selectedSubs.has(catalogKey(cat.name, s))).length;
+
+        const li = document.createElement('li');
+        if (isOpen) li.classList.add('open');
+
+        // nagłówek kategorii
+        const head = document.createElement('button');
+        head.type = 'button';
+        head.className = 'cat-btn';
+        head.setAttribute('aria-expanded', isOpen);
+        head.innerHTML = `
+            <span>${cat.name}${selectedCount ? `<span class="cat-badge">${selectedCount}</span>` : ''}</span>
+            <span class="chev">›</span>
+        `;
+        head.addEventListener('click', () => {
+            if (openCategories.has(cat.name)) openCategories.delete(cat.name);
+            else openCategories.add(cat.name);
+            renderCatalog();
+        });
+        li.appendChild(head);
+
+        // lista podkategorii
+        const ul = document.createElement('ul');
+        ul.className = 'sub-list';
+        cat.children.forEach(sub => {
+            const key = catalogKey(cat.name, sub);
+
+            const item = document.createElement('li');
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'sub-btn';
+            btn.setAttribute('aria-pressed', selectedSubs.has(key));
+            btn.innerHTML = `<span class="box"></span><span>${sub}</span>`;
+            btn.addEventListener('click', () => {
+                if (selectedSubs.has(key)) selectedSubs.delete(key);
+                else selectedSubs.add(key);
+                onCatalogChange();
+            });
+
+            item.appendChild(btn);
+            ul.appendChild(item);
+        });
+        li.appendChild(ul);
+
+        root.appendChild(li);
+    });
+}
+
+function onCatalogChange() {
+    renderCatalog();
+
+    const n = selectedSubs.size;
+    document.getElementById('catalog-count').textContent =
+        n === 0 ? 'No filters' : `${n} selected`;
+
+    console.log('Selected:', [...selectedSubs]);
+
+    // opcjonalnie: filtrowanie punktów (krok 4)
+    if (typeof applyCatalogFilter === 'function') applyCatalogFilter();
+}
+
+document.getElementById('catalog-clear').addEventListener('click', () => {
+    selectedSubs.clear();
+    onCatalogChange();
+});
+
+renderCatalog();
 // --- INFO CARD & MODAL FUNCTIONS ---
 function showInfoCard(point) {
     document.getElementById('info-name').textContent = point.name;
