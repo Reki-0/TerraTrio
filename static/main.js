@@ -408,15 +408,64 @@ listContainer.appendChild(li);
 }
 // --- INTERACTIVE CATALOG ---
 const CATALOG = [
-{ name: 'Soil',                  children: ['Basaltic', 'Basaltic', 'Anorthosite'] },
-{ name: 'Terrain Type',          children: ['Volcanic', 'Desert', 'Polar'] },
-{ name: 'Temperature',           children: ['Below -50°C', '-50 to 0°C', '0 to 25°C', 'Above 25°C'] },
-{ name: 'Wind and Dust',         children: ['Calm', 'Moderate', 'Strong', 'Dust storms'] },
-{ name: 'Ice',                   children: ['Polygon Terrain', 'Glacial features'] },
-{ name: 'Biology',               children: ['Extremophiles', 'Microbial mats', 'Lichens'] },
-{ name: 'Subsurface structures', children: ['Lava tubes', 'Caves', 'Aquifers'] }
+    { 
+        name: 'Soil', 
+        children: [
+            { name: 'Basaltic', color: '#ff5722' },
+            { name: 'Basaltic', color: '#ff7043' },
+            { name: 'Anorthosite', color: '#ffab91' }
+        ] 
+    },
+    { 
+        name: 'Terrain Type', 
+        children: [
+            { name: 'Volcanic', color: '#e91e63' },
+            { name: 'Desert', color: '#9c27b0' },
+            { name: 'Polar', color: '#673ab7' }
+        ] 
+    },
+    { 
+        name: 'Temperature', 
+        children: [
+            { name: 'Below -50°C', color: '#03a9f4' },
+            { name: '-50 to 0°C', color: '#00bcd4' },
+            { name: '0 to 25°C', color: '#8bc34a' },
+            { name: 'Above 25°C', color: '#ffeb3b' }
+        ] 
+    },
+    { 
+        name: 'Wind and Dust', 
+        children: [
+            { name: 'Calm', color: '#cddc39' },
+            { name: 'Moderate', color: '#ffc107' },
+            { name: 'Strong', color: '#ff9800' },
+            { name: 'Dust storms', color: '#795548' }
+        ] 
+    },
+    { 
+        name: 'Ice', 
+        children: [
+            { name: 'Polygon Terrain', color: '#00e5ff' },
+            { name: 'Glacial features', color: '#b388ff' }
+        ] 
+    },
+    { 
+        name: 'Biology', 
+        children: [
+            { name: 'Extremophiles', color: '#4caf50' },
+            { name: 'Microbial mats', color: '#8bc34a' },
+            { name: 'Lichens', color: '#cddc39' }
+        ] 
+    },
+    { 
+        name: 'Subsurface structures', 
+        children: [
+            { name: 'Lava tubes', color: '#607d8b' },
+            { name: 'Caves', color: '#9e9e9e' },
+            { name: 'Aquifers', color: '#2196f3' }
+        ] 
+    }
 ];
-
 const selectedSubs = new Set();      // wybrane podkategorie, klucze "Kategoria::Podkategoria"
 const openCategories = new Set();    // rozwinięte kategorie
 
