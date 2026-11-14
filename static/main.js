@@ -93,6 +93,7 @@ const gridMaterial = new THREE.MeshBasicMaterial({
     map: createGridTexture(),
     transparent: true,
     opacity: 0.8
+    depthWrite: false 
 });
 const planetGrid = new THREE.Mesh(gridGeometry, gridMaterial);
 scene.add(planetGrid);
