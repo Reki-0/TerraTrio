@@ -96,6 +96,7 @@ const gridMaterial = new THREE.MeshBasicMaterial({
     depthWrite: false 
 });
 const planetGrid = new THREE.Mesh(gridGeometry, gridMaterial);
+planetGrid.renderOrder = 2;
 scene.add(planetGrid);
 
 planet.position.y = -0.05;
