@@ -22,3 +22,55 @@ button {
 button:hover {
     background: rgba(255, 255, 255, 0.5);
 }
+
+/* Styl bocznego menu (Sidebar) */
+#sidebar {
+    position: absolute;
+    top: 80px; /* Umieszczone poniżej przycisków wyboru planet */
+    left: 20px;
+    width: 220px;
+    background: rgba(15, 15, 30, 0.85); /* Ciemne, półprzezroczyste tło */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 15px;
+    z-index: 10;
+    color: white;
+    backdrop-filter: blur(5px); /* Efekt rozmycia tła za menu */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+#sidebar h2 {
+    font-size: 16px;
+    margin-top: 0;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding-bottom: 5px;
+}
+
+#sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#sidebar ul li {
+    margin-bottom: 10px;
+}
+
+#sidebar ul li a {
+    color: #b0c4de;
+    text-decoration: none;
+    font-size: 14px;
+    display: block;
+    padding: 8px 10px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+#sidebar ul li a:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+    padding-left: 15px; /* Efekt lekkiego wysunięcia tekstu po najechaniu */
+}
