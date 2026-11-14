@@ -403,8 +403,8 @@ const CATALOG = [
     { 
         name: 'Soil', 
         children: [
-            { name: 'Basaltic', color: '#FF5722' },
-            { name: 'Basaltic', color: '#607D8B' },
+            { name: 'Basaltic Mars ', color: '#FF5722' },
+            { name: 'Basaltic Moon', color: '#607D8B' },
             { name: 'Anorthosite', color: '#607D8B' }
         ] 
     },
@@ -547,6 +547,7 @@ const OVERLAY_OFFSET_X = -11.5/360;
 
 const OVERLAY_FILES = {
     'Terrain Type::Desert': 'terrain_desert.png',
+    'Soil Type::Basaltic': 'soil_basaltic.png',
 };
 
 const overlayLayers = {};
