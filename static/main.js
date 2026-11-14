@@ -410,7 +410,7 @@ function renderSavedPoints() {
 // --- INTERACTIVE CATALOG ---
 const CATALOG = [
     { name: 'Soil',                  children: ['Basaltic', 'Basaltic', 'Anorthosite'] },
-    { name: 'Terrain Type',          children: ['Volcanic', 'Desert', 'Polar', 'Basin', 'Canyon'] },
+    { name: 'Terrain Type',          children: ['Volcanic', 'Desert', 'Polar'] },
     { name: 'Temperature',           children: ['Below -50°C', '-50 to 0°C', '0 to 25°C', 'Above 25°C'] },
     { name: 'Wind and Dust',         children: ['Calm', 'Moderate', 'Strong', 'Dust storms'] },
     { name: 'Ice',                   children: [' Polygon Terrain', 'glacial features'] },
