@@ -133,7 +133,7 @@ function latLonToVector3(lat, lon, radius) {
     
     // Exact alignment correction for standard Earth/Planet equirectangular textures 
     // where lon = 0 is at the center of the image.
-    const theta = (lon - 90) * (Math.PI / 180); 
+    const theta = (lon + 90) * (Math.PI / 180); 
 
     const x = radius * Math.sin(phi) * Math.cos(theta);
     const z = radius * Math.sin(phi) * Math.sin(theta);
@@ -147,7 +147,7 @@ function vector3ToLatLon(vector) {
     const normalized = vector.clone().normalize();
     const lat = 90 - (Math.acos(normalized.y) * 180 / Math.PI);
     
-    let lon = (Math.atan2(normalized.z, normalized.x) * 180 / Math.PI) + 90;
+    let lon = (Math.atan2(normalized.z, normalized.x) * 180 / Math.PI) - 90;
 
     // Normalize longitude to -180 to 180 range
     if (lon > 180) lon -= 360;
