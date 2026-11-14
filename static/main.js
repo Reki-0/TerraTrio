@@ -137,19 +137,26 @@ function toggleRotation() {
 // --- PRECISE GEO-COORDINATES & SAVED POINTS LOGIC ---
 const LONGITUDE_OFFSET = 0; 
 let savedPoints = [];
-const STORAGE_KEY = 'planetPoints_v1';
+const STORAGE_KEY = 'planetPoints_v2';
 
-// Punkty startowe budowane z Twojego LOCATIONS (edytujesz je w jednym miejscu, na górze pliku)
+function bodyLabel(planetName) {
+    if (planetName === 'mars') return 'Mars Analogue';
+    if (planetName === 'moon') return 'Moon Analogue';
+    return 'Earth Analogue';
+}
+
+// Punkty startowe budowane z LOCATIONS
 function getDefaultPoints() {
     const list = [];
     for (const planetName in LOCATIONS) {
-        LOCATIONS[planetName].forEach((loc, i) => {
+        LOCATIONS[planetName].forEach((loc) => {
             list.push({
                 id: Date.now() + list.length,
                 name: loc.name,
                 lat: loc.lat,
                 lon: loc.lon,
-                planet: planetName
+                planet: planetName,
+                body: bodyLabel(planetName)
             });
         });
     }
@@ -157,16 +164,17 @@ function getDefaultPoints() {
 }
 
 function saveToStorage() {
-    const data = savedPoints.map(({ id, name, lat, lon, planet }) => ({ id, name, lat, lon, planet }));
+    const data = savedPoints.map(({ id, name, lat, lon, planet, body }) => ({ id, name, lat, lon, planet, body }));
     try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
     } catch (e) {}
 }
 
 function addPointFromData(d) {
-    const mesh = createMarkerMesh(d.lat, d.lon);
+    const body = d.body || bodyLabel(d.planet);
+    const mesh = createMarkerMesh(d.lat, d.lon, d.name, body);
     mesh.visible = (d.planet === currentPlanet);
-    savedPoints.push({ ...d, mesh });
+    savedPoints.push({ ...d, body, mesh });
 }
 
 function loadSavedPoints() {
@@ -175,7 +183,6 @@ function loadSavedPoints() {
         stored = JSON.parse(localStorage.getItem(STORAGE_KEY));
     } catch (e) {}
 
-    // Pierwsze otwarcie (brak zapisu) = punkty startowe
     const data = Array.isArray(stored) ? stored : getDefaultPoints();
     data.forEach(addPointFromData);
 
