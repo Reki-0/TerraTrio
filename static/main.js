@@ -88,7 +88,6 @@ ctx.stroke();
 return new THREE.CanvasTexture(canvas);
 }
 
-const gridGeometry = new THREE.SphereGeometry(1.003, 64, 64);
 const gridGeometry = new THREE.SphereGeometry(1.006, 64, 64);
 const gridMaterial = new THREE.MeshBasicMaterial({
 map: createGridTexture(),
@@ -123,9 +122,6 @@ console.log(`Loaded points for ${planetName}:`, currentData);
     updateOverlays();
 }
 
-
-
-
 // Rotation state variable
 let isRotating = true;
 
@@ -151,7 +147,6 @@ return Array.isArray(v) ? v : [];
 return [];
 }
 }
-
 function writeStorage(key, value) {
 try {
 localStorage.setItem(key, JSON.stringify(value));
@@ -208,7 +203,6 @@ const userPoints = readStorage(USER_KEY);
 const defaults = getDefaultPoints().filter(p => !deleted.includes(p.id));
 
 [...defaults, ...userPoints].forEach(addPointFromData);
-
 saveToStorage();
 renderSavedPoints();
 }
@@ -415,8 +409,7 @@ const CATALOG = [
 { name: 'Terrain Type',          children: ['Volcanic', 'Desert', 'Polar'] },
 { name: 'Temperature',           children: ['Below -50°C', '-50 to 0°C', '0 to 25°C', 'Above 25°C'] },
 { name: 'Wind and Dust',         children: ['Calm', 'Moderate', 'Strong', 'Dust storms'] },
-    { name: 'Ice',                   children: [' Polygon Terrain', 'glacial features'] },
-    { name: 'Ice',                   children: ['Polygon Terrain', 'Glacial features'] },
+{ name: 'Ice',                   children: ['Polygon Terrain', 'Glacial features'] },
 { name: 'Biology',               children: ['Extremophiles', 'Microbial mats', 'Lichens'] },
 { name: 'Subsurface structures', children: ['Lava tubes', 'Caves', 'Aquifers'] }
 ];
