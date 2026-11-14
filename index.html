@@ -26,7 +26,7 @@
 
     <div id="canvas-container"></div>
 
-    <!-- Left sidebar: catalog + add point form -->
+      <!-- Left sidebar: catalog -->
     <div id="sidebar">
         <h2>Categories</h2>
         <ul id="catalog"></ul>
@@ -34,16 +34,20 @@
             <span id="catalog-count">No filters</span>
             <button id="catalog-clear" type="button">Clear</button>
         </div>
+    </div>
 
-        <div class="add-point-section">
-            <h2>Add Point</h2>
-            <div id="point-form">
-                <input type="text" id="pointName" placeholder="Point Name">
-                <input type="number" id="pointLat" placeholder="Latitude (-90 to 90)" step="any">
-                <input type="number" id="pointLon" placeholder="Longitude (-180 to 180)" step="any">
-                <button onclick="addNewPoint()">Add Point</button>
-            </div>
+    <!-- Right sidebar: add point form + saved points list -->
+    <div id="right-sidebar">
+        <h2>Saved Points</h2>
+        <div id="point-form">
+            <input type="text" id="pointName" placeholder="Point Name">
+            <input type="number" id="pointLat" placeholder="Latitude (-90 to 90)" step="any">
+            <input type="number" id="pointLon" placeholder="Longitude (-180 to 180)" step="any">
+            <button onclick="addNewPoint()">Add Point</button>
         </div>
+        <ul id="saved-points-list">
+            <!-- Saved points will appear here dynamically -->
+        </ul>
     </div>
 
     <!-- Right sidebar: saved points list -->
