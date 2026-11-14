@@ -103,11 +103,15 @@ function changePlanet(planetName) {
 
 }
 
-// Pętla animacji
 function animate() {
     requestAnimationFrame(animate);
-    planet.rotation.y += 0.001; // Powolny obrót
-    planetGrid.rotation.y += 0.001; // Synchronized rotation with the planet
+    
+    // Rotate only if rotation is enabled
+    if (isRotating) {
+        planet.rotation.y += 0.001;
+        planetGrid.rotation.y += 0.001;
+    }
+    
     controls.update();
     renderer.render(scene, camera);
 }
@@ -291,5 +295,15 @@ function renderSavedPoints() {
         listContainer.appendChild(li);
     });
 }
+// Rotation state variable
+let isRotating = true;
 
+// Function to toggle planet rotation on/off
+function toggleRotation() {
+    isRotating = !isRotating;
+    const btn = document.getElementById('rotBtn');
+    if (btn) {
+        btn.textContent = isRotating ? "Pause Rotation" : "Resume Rotation";
+    }
+}
 
