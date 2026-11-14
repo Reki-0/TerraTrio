@@ -83,12 +83,17 @@ const gridMaterial = new THREE.MeshBasicMaterial({
 });
 const planetGrid = new THREE.Mesh(gridGeometry, gridMaterial);
 scene.add(planetGrid);
-
+let currentPlanet = 'earth';
 // Function to switch planets
 function changePlanet(planetName) {
     const newTexture = textureLoader.load(`./static/textures/${planetName}.jpg`);
     planet.material.map = newTexture;
     planet.material.needsUpdate = true;
+     // pokaż tylko markery z wybranej planety
+    savedPoints.forEach(point => {
+        point.mesh.visible = (point.planet === planetName);
+    });
+    renderSavedPoints();
     
     const currentData = LOCATIONS[planetName] || [];
     console.log(`Loaded points for ${planetName}:`, currentData);
@@ -185,6 +190,7 @@ window.addEventListener('click', (event) => {
             name: pointName,
             lat: coords.lat,
             lon: coords.lon,
+            planet: currentPlanet,
             mesh: markerMesh
         };
 
@@ -220,6 +226,7 @@ function addNewPoint() {
         name: name,
         lat: lat,
         lon: lon,
+        planet: currentPlanet,
         mesh: markerMesh
     };
 
@@ -250,14 +257,16 @@ function renderSavedPoints() {
     const listContainer = document.getElementById('saved-points-list');
     listContainer.innerHTML = '';
 
-    savedPoints.forEach(point => {
-        const li = document.createElement('li');
-        li.innerHTML = `
-            <span><strong>${point.name}</strong><br><small>Lat: ${point.lat}, Lon: ${point.lon}</small></span>
-            <button class="delete-btn" onclick="deletePoint(${point.id})">Delete</button>
-        `;
-        listContainer.appendChild(li);
-    });
+    savedPoints
+        .filter(point => point.planet === currentPlanet)
+        .forEach(point => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+                <span><strong>${point.name}</strong><br><small>Lat: ${point.lat}, Lon: ${point.lon}</small></span>
+                <button class="delete-btn" onclick="deletePoint(${point.id})">Delete</button>
+            `;
+            listContainer.appendChild(li);
+        });
 }
 
 // --- ANIMATION & RESIZE ---
