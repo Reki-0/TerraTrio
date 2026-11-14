@@ -413,7 +413,7 @@ const CATALOG = [
     { name: 'Terrain Type',          children: ['Volcanic', 'Desert', 'Polar', 'Basin', 'Canyon'] },
     { name: 'Temperature',           children: ['Below -50°C', '-50 to 0°C', '0 to 25°C', 'Above 25°C'] },
     { name: 'Wind and Dust',         children: ['Calm', 'Moderate', 'Strong', 'Dust storms'] },
-    { name: 'Water-Based Resources', children: ['Ice', 'Brines', 'Hydrated minerals', 'Groundwater'] },
+    { name: 'Ice',                   children: [' Polygon Terrain', 'glacial features'] },
     { name: 'Biology',               children: ['Extremophiles', 'Microbial mats', 'Lichens'] },
     { name: 'Subsurface structures', children: ['Lava tubes', 'Caves', 'Aquifers'] }
 ];
