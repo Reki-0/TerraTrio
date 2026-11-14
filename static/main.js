@@ -134,7 +134,51 @@ function toggleRotation() {
 // --- PRECISE GEO-COORDINATES & SAVED POINTS LOGIC ---
 const LONGITUDE_OFFSET = 0; 
 let savedPoints = [];
+const STORAGE_KEY = 'planetPoints_v1';
 
+// Punkty startowe budowane z Twojego LOCATIONS (edytujesz je w jednym miejscu, na górze pliku)
+function getDefaultPoints() {
+    const list = [];
+    for (const planetName in LOCATIONS) {
+        LOCATIONS[planetName].forEach((loc, i) => {
+            list.push({
+                id: Date.now() + list.length,
+                name: loc.name,
+                lat: loc.lat,
+                lon: loc.lon,
+                planet: planetName
+            });
+        });
+    }
+    return list;
+}
+
+function saveToStorage() {
+    const data = savedPoints.map(({ id, name, lat, lon, planet }) => ({ id, name, lat, lon, planet }));
+    try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    } catch (e) {}
+}
+
+function addPointFromData(d) {
+    const mesh = createMarkerMesh(d.lat, d.lon);
+    mesh.visible = (d.planet === currentPlanet);
+    savedPoints.push({ ...d, mesh });
+}
+
+function loadSavedPoints() {
+    let stored = null;
+    try {
+        stored = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    } catch (e) {}
+
+    // Pierwsze otwarcie (brak zapisu) = punkty startowe
+    const data = Array.isArray(stored) ? stored : getDefaultPoints();
+    data.forEach(addPointFromData);
+
+    saveToStorage();
+    renderSavedPoints();
+}
 function latLonToVector3(lat, lon, radius) {
     const adjustedLon = lon + LONGITUDE_OFFSET;
     const phi = (90 - lat) * (Math.PI / 180);
@@ -248,6 +292,7 @@ window.addEventListener('dblclick', (event) => {
         };
 
         savedPoints.push(newPoint);
+        saveToStorage();
         renderSavedPoints();
     }
 });
@@ -289,6 +334,7 @@ function addNewPoint() {
     };
 
     savedPoints.push(newPoint);
+    saveToStorage();
     renderSavedPoints();
 
     nameInput.value = '';
@@ -307,6 +353,7 @@ function deletePoint(id) {
     }
 
     savedPoints = savedPoints.filter(point => point.id !== id);
+    saveToStorage();
     closeInfoCard();
     renderSavedPoints();
 }
@@ -375,3 +422,4 @@ window.addEventListener('resize', () => {
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
 });
+loadSavedPoints();
