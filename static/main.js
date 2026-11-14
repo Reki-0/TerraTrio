@@ -66,3 +66,57 @@ function selectCategory(categoryName) {
     console.log("Wybrano kategorię:", categoryName);
     
 }
+// Array to store user custom saved points
+let savedPoints = [];
+
+// Function to add a new point from the right sidebar form
+function addNewPoint() {
+    const nameInput = document.getElementById('pointName');
+    const latInput = document.getElementById('pointLat');
+    const lonInput = document.getElementById('pointLon');
+
+    const name = nameInput.value.trim();
+    const lat = parseFloat(latInput.value);
+    const lon = parseFloat(lonInput.value);
+
+    if (!name || isNaN(lat) || isNaN(lon)) {
+        alert("Please fill in all fields with valid values!");
+        return;
+    }
+
+    const newPoint = {
+        id: Date.now(), // unique identifier based on timestamp
+        name: name,
+        lat: lat,
+        lon: lon
+    };
+
+    savedPoints.push(newPoint);
+    renderSavedPoints();
+
+    // Clear input fields after adding
+    nameInput.value = '';
+    latInput.value = '';
+    lonInput.value = '';
+}
+
+// Function to delete a saved point by its ID
+function deletePoint(id) {
+    savedPoints = savedPoints.filter(point => point.id !== id);
+    renderSavedPoints();
+}
+
+// Function to update the HTML list of saved points
+function renderSavedPoints() {
+    const listContainer = document.getElementById('saved-points-list');
+    listContainer.innerHTML = '';
+
+    savedPoints.forEach(point => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+            <span><strong>${point.name}</strong><br><small>Lat: ${point.lat}, Lon: ${point.lon}</small></span>
+            <button class="delete-btn" onclick="deletePoint(${point.id})">Delete</button>
+        `;
+        listContainer.appendChild(li);
+    });
+}
