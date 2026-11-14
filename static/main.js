@@ -33,6 +33,62 @@ let material = new THREE.MeshStandardMaterial({
 const planet = new THREE.Mesh(geometry, material);
 scene.add(planet);
 
+// --- LATITUDE & LONGITUDE GRID OVERLAY ---
+
+// Function to dynamically generate an equirectangular grid texture via JavaScript
+function createGridTexture() {
+    const canvas = document.createElement('canvas');
+    canvas.width = 2048;
+    canvas.height = 1024;
+    const ctx = canvas.getContext('2d');
+
+    // Transparent background
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Style for grid lines (semi-transparent cyan/white sci-fi grid)
+    ctx.strokeStyle = 'rgba(0, 255, 255, 0.25)';
+    ctx.lineWidth = 1.5;
+
+    const stepsLat = 12; // Number of parallel lines divisions
+    const stepsLon = 24; // Number of meridian lines divisions
+
+    // Draw Parallels (Latitude lines)
+    for (let i = 1; i < stepsLat; i++) {
+        const y = (canvas.height / stepsLat) * i;
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvas.width, y);
+        ctx.stroke();
+    }
+
+    // Draw Meridians (Longitude lines)
+    for (let i = 0; i < stepsLon; i++) {
+        const x = (canvas.width / stepsLon) * i;
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, canvas.height);
+        ctx.stroke();
+    }
+
+    // Create Three.js texture from canvas
+    const texture = new THREE.CanvasTexture(canvas);
+    return texture;
+}
+
+// Create the grid sphere overlay (slightly larger than the planet to avoid visual glitches)
+const gridGeometry = new THREE.SphereGeometry(1.003, 64, 64);
+const gridMaterial = new THREE.MeshBasicMaterial({
+    map: createGridTexture(),
+    transparent: true,
+    opacity: 0.8,
+    wireframe: false
+});
+
+const planetGrid = new THREE.Mesh(gridGeometry, gridMaterial);
+scene.add(planetGrid);
+
+// Make sure the grid rotates together with the planet inside the animate loop
+
 // Funkcja zmiany planety
 function changePlanet(planetName) {
     const newTexture = textureLoader.load(`./static/textures/${planetName}.jpg`);
