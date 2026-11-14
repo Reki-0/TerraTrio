@@ -105,6 +105,7 @@ function changePlanet(planetName) {
 function animate() {
     requestAnimationFrame(animate);
     planet.rotation.y += 0.001; // Powolny obrót
+    planetGrid.rotation.y += 0.001; // Synchronized rotation with the planet
     controls.update();
     renderer.render(scene, camera);
 }
