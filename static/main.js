@@ -95,6 +95,7 @@ const gridMaterial = new THREE.MeshBasicMaterial({
     opacity: 0.8,
     depthWrite: false          // <-- dodaj
 });
+planetGrid.renderOrder = 2;    // <-- dodaj
 const planetGrid = new THREE.Mesh(gridGeometry, gridMaterial);
 
 scene.add(planetGrid);
@@ -508,7 +509,6 @@ const OVERLAY_OFFSET_X = -11.5/360;     // jeśli mapy są przesunięte względe
 
 // "Kategoria::Podkategoria" -> plik PNG (folder: static/overlays/<planeta>/)
 const OVERLAY_FILES = {
-    'Soil::Basaltic':            'soil_basaltic.png',
     'Terrain Type::Desert':      'terrain_desert.png',
 };
 
