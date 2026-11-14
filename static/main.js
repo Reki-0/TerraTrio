@@ -558,12 +558,12 @@ function getOverlayLayer(key) {
     const cacheKey = currentPlanet + '|' + key;
     if (overlayLayers[cacheKey]) return overlayLayers[cacheKey];
 
-    const texture = textureLoader.load(
-        `./static/overlays/${currentPlanet}/${file}`,
-        undefined,
-        undefined,
-        () => console.warn('Missing overlay file:', currentPlanet, file)
-    );
+   const texture = textureLoader.load(
+    `./static/textures/static/overlays/${currentPlanet}/${file}`,
+    undefined,
+    undefined,
+    () => console.warn('Missing overlay file:', currentPlanet, file)
+);
     if (OVERLAY_OFFSET_X) {
         texture.wrapS = THREE.RepeatWrapping;
         texture.offset.x = OVERLAY_OFFSET_X;
