@@ -123,37 +123,95 @@ function selectCategory(categoryName) {
     console.log("Wybrano kategorię:", categoryName);
     
 }
-// Array to store user custom saved points
+// --- PRECISE GEO-COORDINATES & SAVED POINTS LOGIC ---
+
 let savedPoints = [];
 
-// Helper function to convert Latitude & Longitude into 3D coordinates (x, y, z) on a sphere
+// Helper function with precise real-world alignment for Equirectangular maps
 function latLonToVector3(lat, lon, radius) {
     const phi = (90 - lat) * (Math.PI / 180);
-    const theta = (lon + 180) * (Math.PI / 180);
+    
+    // Exact alignment correction for standard Earth/Planet equirectangular textures 
+    // where lon = 0 is at the center of the image.
+    const theta = (lon - 90) * (Math.PI / 180); 
 
-    const x = -(radius * Math.sin(phi) * Math.cos(theta));
-    const z = (radius * Math.sin(phi) * Math.sin(theta));
-    const y = (radius * Math.cos(phi));
+    const x = radius * Math.sin(phi) * Math.cos(theta);
+    const z = radius * Math.sin(phi) * Math.sin(theta);
+    const y = radius * Math.cos(phi);
 
     return new THREE.Vector3(x, y, z);
 }
 
+// Helper function to convert 3D point back to exact real-world Latitude & Longitude
+function vector3ToLatLon(vector) {
+    const normalized = vector.clone().normalize();
+    const lat = 90 - (Math.acos(normalized.y) * 180 / Math.PI);
+    
+    let lon = (Math.atan2(normalized.z, normalized.x) * 180 / Math.PI) + 90;
+
+    // Normalize longitude to -180 to 180 range
+    if (lon > 180) lon -= 360;
+    if (lon < -180) lon += 360;
+
+    return { 
+        lat: parseFloat(lat.toFixed(2)), 
+        lon: parseFloat(lon.toFixed(2)) 
+    };
+}
+
 // Function to create a red 3D dot marker on the planet
 function createMarkerMesh(lat, lon) {
-    const markerGeometry = new THREE.SphereGeometry(0.015, 16, 16); // Small sphere size
-    const markerMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 }); // Bright red color
+    const markerGeometry = new THREE.SphereGeometry(0.015, 16, 16);
+    const markerMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
     const markerMesh = new THREE.Mesh(markerGeometry, markerMaterial);
 
-    // Position the marker slightly above the surface (radius = 1.005)
     const position = latLonToVector3(lat, lon, 1.005);
     markerMesh.position.copy(position);
 
-    // Attach directly to the planet mesh so it rotates with the globe
     planet.add(markerMesh);
     return markerMesh;
 }
 
-// Function to add a new point from the right sidebar form
+// Raycasting: Click on the planet to place a point with real-world accuracy
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+
+window.addEventListener('click', (event) => {
+    if (event.target.closest('#sidebar') || event.target.closest('#right-sidebar')) {
+        return;
+    }
+
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+    raycaster.setFromCamera(mouse, camera);
+    const intersects = raycaster.intersectObject(planet);
+
+    if (intersects.length > 0) {
+        const intersectPoint = intersects[0].point;
+        planet.worldToLocal(intersectPoint);
+        
+        const coords = vector3ToLatLon(intersectPoint);
+
+        const pointName = prompt(`Enter name for location (Lat: ${coords.lat}, Lon: ${coords.lon}):`, "My Point");
+        if (!pointName) return;
+
+        const markerMesh = createMarkerMesh(coords.lat, coords.lon);
+
+        const newPoint = {
+            id: Date.now(),
+            name: pointName,
+            lat: coords.lat,
+            lon: coords.lon,
+            mesh: markerMesh
+        };
+
+        savedPoints.push(newPoint);
+        renderSavedPoints();
+    }
+});
+
+// Function to add a point manually via the form
 function addNewPoint() {
     const nameInput = document.getElementById('pointName');
     const latInput = document.getElementById('pointLat');
@@ -173,7 +231,6 @@ function addNewPoint() {
         return;
     }
 
-    // Create the 3D red dot on the planet
     const markerMesh = createMarkerMesh(lat, lon);
 
     const newPoint = {
@@ -181,24 +238,23 @@ function addNewPoint() {
         name: name,
         lat: lat,
         lon: lon,
-        mesh: markerMesh // Store reference to the 3D object for later deletion
+        mesh: markerMesh
     };
 
     savedPoints.push(newPoint);
     renderSavedPoints();
 
-    // Clear input fields
     nameInput.value = '';
     latInput.value = '';
     lonInput.value = '';
 }
 
-// Function to delete a saved point and remove its red dot from the 3D globe
+// Function to delete a saved point
 function deletePoint(id) {
     const pointToDelete = savedPoints.find(point => point.id === id);
     
     if (pointToDelete && pointToDelete.mesh) {
-        planet.remove(pointToDelete.mesh); // Remove 3D marker from the planet
+        planet.remove(pointToDelete.mesh);
         pointToDelete.mesh.geometry.dispose();
         pointToDelete.mesh.material.dispose();
     }
@@ -216,8 +272,15 @@ function renderSavedPoints() {
         const li = document.createElement('li');
         li.innerHTML = `
             <span><strong>${point.name}</strong><br><small>Lat: ${point.lat}, Lon: ${point.lon}</small></span>
+            <button class="delete-btn" onclick="deletePoint(${point.id})">Delete</ge>
+        `;
+        // Poprawka literówki w przycisku delete poniżej:
+        li.innerHTML = `
+            <span><strong>${point.name}</strong><br><small>Lat: ${point.lat}, Lon: ${point.lon}</small></span>
             <button class="delete-btn" onclick="deletePoint(${point.id})">Delete</button>
         `;
         listContainer.appendChild(li);
     });
+}
+
 }
