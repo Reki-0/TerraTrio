@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="eng">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>TerraTrio</title>
@@ -9,12 +9,13 @@
     <div style="position: fixed; top: 15px; left: 50%; transform: translateX(-50%); z-index: 9999; color: white; font-family: Arial, sans-serif; font-size: 28px; font-weight: bold; pointer-events: none; text-shadow: 0 2px 10px rgba(0,255,255,0.8);">
         TerraTrio
     </div>
-   <div id="info-badge" tabindex="0" aria-describedby="info-tooltip">i</div>
-<div id="info-tooltip" role="tooltip">
-    <strong>TerraTrio</strong>
-    <p>Drag to rotate the planet and scroll to zoom.</p>
-    <p>Double-click the surface to add a point. Click a red dot to see its details.</p>
-</div>
+
+    <div id="info-badge" tabindex="0" aria-describedby="info-tooltip">i</div>
+    <div id="info-tooltip" role="tooltip">
+        <strong>TerraTrio</strong>
+        <p>Drag to rotate the planet and scroll to zoom.</p>
+        <p>Double-click the surface to add a point. Click a red dot to see its details.</p>
+    </div>
 
     <div id="ui">
         <button onclick="changePlanet('earth')">Earth</button>
@@ -22,62 +23,58 @@
         <button onclick="changePlanet('moon')">Moon</button>
         <button onclick="toggleRotation()" id="rotBtn">Pause Rotation</button>
     </div>
-    
-   
-    
+
     <div id="canvas-container"></div>
 
-    <!-- Boczne menu kategorii -->
-<div id="sidebar">
-    <h2>Categories</h2>
-    <ul>
-        <li><a href="#" onclick="selectCategory('Soil')">Soil</a></li>
-        <li><a href="#" onclick="selectCategory('Terrain Type')">Terrain Type</a></li>
-        <li><a href="#" onclick="selectCategory('Temperature')">Temperature</a></li>
-        <li><a href="#" onclick="selectCategory('Wind and Dust')">Wind and Dust</a></li>
-        <li><a href="#" onclick="selectCategory('Water-Based Resources')">Water-Based Resources</a></li>
-        <li><a href="#" onclick="selectCategory('Biology')">Biology</a></li>
-        <li><a href="#" onclick="selectCategory('Subsurface structures')">Subsurface structures</a></li>
-    <!-- Right Sidebar for Saved Points -->
-<div id="right-sidebar">
-    <h2>Saved Points</h2>
-    <div id="point-form">
-        <input type="text" id="pointName" placeholder="Point Name">
-        <input type="number" id="pointLat" placeholder="Latitude (-90 to 90)" step="any">
-        <input type="number" id="pointLon" placeholder="Longitude (-180 to 180)" step="any">
-        <button onclick="addNewPoint()">Add Point</button>
+    <!-- Left sidebar: catalog + add point form -->
+    <div id="sidebar">
+        <h2>Categories</h2>
+        <ul id="catalog"></ul>
+        <div id="catalog-footer">
+            <span id="catalog-count">No filters</span>
+            <button id="catalog-clear" type="button">Clear</button>
+        </div>
+
+        <div class="add-point-section">
+            <h2>Add Point</h2>
+            <div id="point-form">
+                <input type="text" id="pointName" placeholder="Point Name">
+                <input type="number" id="pointLat" placeholder="Latitude (-90 to 90)" step="any">
+                <input type="number" id="pointLon" placeholder="Longitude (-180 to 180)" step="any">
+                <button onclick="addNewPoint()">Add Point</button>
+            </div>
+        </div>
     </div>
-    <ul id="saved-points-list">
-        <!-- Saved points will appear here dynamically -->
-    </ul>
-</div>
-<!-- Point Info Popup Card -->
-<div id="point-info-card" style="display: none;">
-    <button class="close-btn" onclick="closeInfoCard()">×</button>
-    <h3 id="info-name">Point Name</h3>
-    <p><strong>Coordinates:</strong> <span id="info-coords">Lat: 0, Lon: 0</span></p>
-    <p><strong>Celestial Body:</strong> <span id="info-body">Earth</span></p>
-    <button onclick="openDetailsModal()">View Detailed Data</button>
-</div>
 
-<!-- Detailed Data Modal Window -->
-<div id="details-modal" style="display: none;">
-    <div class="modal-content">
-        <h2 id="modal-title">Detailed Information</h2>
-        <p id="modal-desc">Here you can display extended scientific data, exploration history, or geological features.</p>
-        <button onclick="closeDetailsModal()">Close Window</button>
+    <!-- Right sidebar: saved points list -->
+    <div id="right-sidebar">
+        <h2>Saved Points</h2>
+        <ul id="saved-points-list">
+            <!-- Saved points will appear here dynamically -->
+        </ul>
     </div>
-</div>
- <!-- Detailed Data Modal Window -->
-<div id="details-modal" style="display: none;">
-    ...
-</div>
 
-<!-- Biblioteka Three.js i kontrola kamery (OrbitControls) -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-<script src="static/main.js"></script>
+    <!-- Point Info Popup Card -->
+    <div id="point-info-card" style="display: none;">
+        <button class="close-btn" onclick="closeInfoCard()">×</button>
+        <h3 id="info-name">Point Name</h3>
+        <p><strong>Coordinates:</strong> <span id="info-coords">Lat: 0, Lon: 0</span></p>
+        <p><strong>Celestial Body:</strong> <span id="info-body">Earth</span></p>
+        <button onclick="openDetailsModal()">View Detailed Data</button>
+    </div>
 
+    <!-- Detailed Data Modal Window -->
+    <div id="details-modal" style="display: none;">
+        <div class="modal-content">
+            <h2 id="modal-title">Detailed Information</h2>
+            <p id="modal-desc">Here you can display extended scientific data, exploration history, or geological features.</p>
+            <button onclick="closeDetailsModal()">Close Window</button>
+        </div>
+    </div>
+
+    <!-- Three.js and camera controls (OrbitControls) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="static/main.js"></script>
 </body>
 </html>
-
