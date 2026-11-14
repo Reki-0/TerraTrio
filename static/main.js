@@ -1,9 +1,17 @@
-// Dane lokacji (zastępują backend Pythona)
+// Location data categories
 const LOCATIONS = {
-    "earth": [{ name: "Warszawa", lat: 52.23, lon: 21.01, info: "Stolica Polski" }],
-    "mars": [{ name: "Olympus Mons", lat: 18.65, lon: 226.2, info: "Najwyższy wulkan" }],
-    "moon": [{ name: "Morze Spokoju", lat: 0.67, lon: 23.47, info: "Apollo 11" }]
+    "earth": [
+        { name: "Warsaw", lat: 52.23, lon: 21.01, info: "Capital of Poland", category: "bases" }
+    ],
+    "mars": [
+        { name: "Olympus Mons", lat: 18.65, lon: 226.2, info: "Largest volcano in the Solar System", category: "volcanoes" }
+    ],
+    "moon": [
+        { name: "Sea of Tranquility", lat: 0.67, lon: 23.47, info: "Apollo 11 landing site", category: "missions" }
+    ]
 };
+
+// Scene, Camera & Renderer setup
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -11,50 +19,43 @@ const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.getElementById('canvas-container').appendChild(renderer.domElement);
 
-// Kontrola myszką (obracanie, przybliżanie)
+// Mouse controls with zoom limits
 const controls = new THREE.OrbitControls(camera, renderer.domElement);
+controls.minDistance = 1.1;
+controls.maxDistance = 10;
 camera.position.z = 3;
-controls.minDistance = 1.1; // Nie pozwala przybliżyć się bardziej niż 1.1 (promień planety to 1)
-controls.maxDistance = 10;  // Opcjonalnie: nie pozwala odallić się zbytnio
 
-// Światło
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+// Lighting
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
 scene.add(ambientLight);
-const pointLight = new THREE.PointLight(0xffffff, 1);
+const pointLight = new THREE.PointLight(0xffffff, 0.5);
 pointLight.position.set(5, 3, 5);
 scene.add(pointLight);
 
-// Tworzenie planety (Sfera)
+// Main Planet Sphere
 const geometry = new THREE.SphereGeometry(1, 64, 64);
 const textureLoader = new THREE.TextureLoader();
+
 let material = new THREE.MeshStandardMaterial({
-    map: textureLoader.load('./static/textures/earth.jpg') // Upewnij się, że masz ten plik!
+    map: textureLoader.load('./static/textures/earth.jpg')
 });
 const planet = new THREE.Mesh(geometry, material);
 scene.add(planet);
-controls.target.set(0, 0, 0);
-controls.enablePan = false;   
 
 // --- LATITUDE & LONGITUDE GRID OVERLAY ---
-
-// Function to dynamically generate an equirectangular grid texture via JavaScript
 function createGridTexture() {
     const canvas = document.createElement('canvas');
     canvas.width = 2048;
     canvas.height = 1024;
     const ctx = canvas.getContext('2d');
 
-    // Transparent background
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Style for grid lines (semi-transparent cyan/white sci-fi grid)
     ctx.strokeStyle = 'rgba(0, 255, 255, 0.25)';
     ctx.lineWidth = 1.5;
 
-    const stepsLat = 12; // Number of parallel lines divisions
-    const stepsLon = 24; // Number of meridian lines divisions
+    const stepsLat = 12;
+    const stepsLon = 24;
 
-    // Draw Parallels (Latitude lines)
     for (let i = 1; i < stepsLat; i++) {
         const y = (canvas.height / stepsLat) * i;
         ctx.beginPath();
@@ -63,7 +64,6 @@ function createGridTexture() {
         ctx.stroke();
     }
 
-    // Draw Meridians (Longitude lines)
     for (let i = 0; i < stepsLon; i++) {
         const x = (canvas.width / stepsLon) * i;
         ctx.beginPath();
@@ -72,76 +72,53 @@ function createGridTexture() {
         ctx.stroke();
     }
 
-    // Create Three.js texture from canvas
-    const texture = new THREE.CanvasTexture(canvas);
-    return texture;
+    return new THREE.CanvasTexture(canvas);
 }
 
-// Create the grid sphere overlay (slightly larger than the planet to avoid visual glitches)
 const gridGeometry = new THREE.SphereGeometry(1.003, 64, 64);
 const gridMaterial = new THREE.MeshBasicMaterial({
     map: createGridTexture(),
     transparent: true,
-    opacity: 0.8,
-    wireframe: false
+    opacity: 0.8
 });
-
 const planetGrid = new THREE.Mesh(gridGeometry, gridMaterial);
 scene.add(planetGrid);
 
-// Make sure the grid rotates together with the planet inside the animate loop
-
-// Funkcja zmiany planety
+// Function to switch planets
 function changePlanet(planetName) {
     const newTexture = textureLoader.load(`./static/textures/${planetName}.jpg`);
     planet.material.map = newTexture;
     planet.material.needsUpdate = true;
     
-    // Pobieraanie danych lokalnie z JS
-    const data = LOCATIONS[planetName] || [];
-    console.log(`Punkty na ${planetName}:`, data);
-
+    const currentData = LOCATIONS[planetName] || [];
+    console.log(`Loaded points for ${planetName}:`, currentData);
 }
 
-function animate() {
-    requestAnimationFrame(animate);
-    
-    // Rotate only if rotation is enabled
-    if (isRotating) {
-        planet.rotation.y += 0.001;
-        planetGrid.rotation.y += 0.001;
-    }
-    
-    controls.update();
-    renderer.render(scene, camera);
-}
-animate();
-
-// Skalowanie przy zmianie rozmiaru okna
-window.addEventListener('resize', () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-});
-
-// Obsługa kliknięcia w kategorie w bocznym menu
+// Category selection handler from left sidebar
 function selectCategory(categoryName) {
-    console.log("Wybrano kategorię:", categoryName);
-    
+    console.log("Selected category:", categoryName);
 }
-// --- PRECISE GEO-COORDINATES & SAVED POINTS LOGIC ---
 
+// Rotation state variable
+let isRotating = true;
+
+function toggleRotation() {
+    isRotating = !isRotating;
+    const btn = document.getElementById('rotBtn');
+    if (btn) {
+        btn.textContent = isRotating ? "Pause Rotation" : "Resume Rotation";
+    }
+}
+
+// --- PRECISE GEO-COORDINATES & SAVED POINTS LOGIC ---
+const LONGITUDE_OFFSET = 0; 
 let savedPoints = [];
-const LONGITUDE_OFFSET = -4; 
 
 function latLonToVector3(lat, lon, radius) {
-    // Uwzględnienie offsetu tekstury
     const adjustedLon = lon + LONGITUDE_OFFSET;
-    
     const phi = (90 - lat) * (Math.PI / 180);
     const theta = (adjustedLon + 180) * (Math.PI / 180); 
 
-    // Standardowe, matematycznie poprawne mapowanie sferyczne dla Three.js
     const x = -radius * Math.sin(phi) * Math.cos(theta);
     const z = radius * Math.sin(phi) * Math.sin(theta);
     const y = radius * Math.cos(phi);
@@ -152,13 +129,10 @@ function latLonToVector3(lat, lon, radius) {
 function vector3ToLatLon(vector) {
     const normalized = vector.clone().normalize();
     const lat = 90 - (Math.acos(normalized.y) * 180 / Math.PI);
-    
     let lon = (Math.atan2(normalized.z, -normalized.x) * 180 / Math.PI) - 180;
 
-    // Odejmujemy ten sam offset przy przeliczaniu kliknięcia myszką
     lon -= LONGITUDE_OFFSET;
 
-    // Normalizacja do zakresu -180 do 180
     while (lon > 180) lon -= 360;
     while (lon < -180) lon += 360;
 
@@ -168,11 +142,6 @@ function vector3ToLatLon(vector) {
     };
 }
 
-    
-
-
-
-// Function to create a red 3D dot marker on the planet
 function createMarkerMesh(lat, lon) {
     const markerGeometry = new THREE.SphereGeometry(0.015, 16, 16);
     const markerMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
@@ -185,12 +154,12 @@ function createMarkerMesh(lat, lon) {
     return markerMesh;
 }
 
-// Raycasting: Click on the planet to place a point with real-world accuracy
+// Raycasting: Click on the planet to place a point
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 
 window.addEventListener('click', (event) => {
-    if (event.target.closest('#sidebar') || event.target.closest('#right-sidebar')) {
+    if (event.target.closest('#sidebar') || event.target.closest('#right-sidebar') || event.target.closest('#ui')) {
         return;
     }
 
@@ -224,7 +193,7 @@ window.addEventListener('click', (event) => {
     }
 });
 
-// Function to add a point manually via the form
+// Add point manually via right sidebar form
 function addNewPoint() {
     const nameInput = document.getElementById('pointName');
     const latInput = document.getElementById('pointLat');
@@ -262,7 +231,7 @@ function addNewPoint() {
     lonInput.value = '';
 }
 
-// Function to delete a saved point
+// Delete saved point
 function deletePoint(id) {
     const pointToDelete = savedPoints.find(point => point.id === id);
     
@@ -276,7 +245,7 @@ function deletePoint(id) {
     renderSavedPoints();
 }
 
-// Function to update the HTML list in the right sidebar
+// Render HTML list in right sidebar
 function renderSavedPoints() {
     const listContainer = document.getElementById('saved-points-list');
     listContainer.innerHTML = '';
@@ -285,25 +254,28 @@ function renderSavedPoints() {
         const li = document.createElement('li');
         li.innerHTML = `
             <span><strong>${point.name}</strong><br><small>Lat: ${point.lat}, Lon: ${point.lon}</small></span>
-            <button class="delete-btn" onclick="deletePoint(${point.id})">Delete</ge>
-        `;
-        // Poprawka literówki w przycisku delete poniżej:
-        li.innerHTML = `
-            <span><strong>${point.name}</strong><br><small>Lat: ${point.lat}, Lon: ${point.lon}</small></span>
             <button class="delete-btn" onclick="deletePoint(${point.id})">Delete</button>
         `;
         listContainer.appendChild(li);
     });
 }
-// Rotation state variable
-let isRotating = true;
 
-// Function to toggle planet rotation on/off
-function toggleRotation() {
-    isRotating = !isRotating;
-    const btn = document.getElementById('rotBtn');
-    if (btn) {
-        btn.textContent = isRotating ? "Pause Rotation" : "Resume Rotation";
+// --- ANIMATION & RESIZE ---
+function animate() {
+    requestAnimationFrame(animate);
+    
+    if (isRotating) {
+        planet.rotation.y += 0.001;
+        planetGrid.rotation.y += 0.001;
     }
+    
+    controls.update();
+    renderer.render(scene, camera);
 }
+animate();
 
+window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+});
