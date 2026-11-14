@@ -419,19 +419,15 @@ const CATALOG = [
     { 
         name: 'Temperature', 
         children: [
-            { name: 'Below -50°C', color: '#03a9f4' },
-            { name: '-50 to 0°C', color: '#00bcd4' },
-            { name: '0 to 25°C', color: '#8bc34a' },
-            { name: 'Above 25°C', color: '#ffeb3b' }
+            { name: 'Below -40°C', color: '#03a9f4' },
+            { name: 'Above 40°C', color: '#ffeb3b' }
         ] 
     },
     { 
         name: 'Wind and Dust', 
         children: [
-            { name: 'Calm', color: '#cddc39' },
-            { name: 'Moderate', color: '#ffc107' },
-            { name: 'Strong', color: '#ff9800' },
-            { name: 'Dust storms', color: '#795548' }
+            { name: 'Aeolian landforms', color: '#cddc39' },
+            { name: 'Dust & Dust storms', color: '#ffc107' },
         ] 
     },
     { 
@@ -442,11 +438,11 @@ const CATALOG = [
         ] 
     },
     { 
-        name: 'Biology', 
+        name: 'AstroBiology', 
         children: [
-            { name: 'Extremophiles', color: '#4caf50' },
-            { name: 'Microbial mats', color: '#8bc34a' },
-            { name: 'Lichens', color: '#cddc39' }
+            {name: 'Moon", color: ' ' },
+            {name: 'Mars', color: ' ' },
+       
         ] 
     },
     { 
@@ -454,7 +450,7 @@ const CATALOG = [
         children: [
             { name: 'Lava tubes', color: '#607d8b' },
             { name: 'Caves', color: '#9e9e9e' },
-            { name: 'Aquifers', color: '#2196f3' }
+         
         ] 
     }
 ];
