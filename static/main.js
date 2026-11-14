@@ -33,9 +33,19 @@ pointLight.position.set(5, 3, 5);
 scene.add(pointLight);
 
 // Main Planet Sphere
+
 const geometry = new THREE.SphereGeometry(1, 64, 64);
 const textureLoader = new THREE.TextureLoader();
-
+// The Earth image's prime meridian lies about 11.5 degrees left of center.
+// Shift its sampling to align it with the geographic grid and markers.
+function loadPlanetTexture(planetName) {
+    const texture = textureLoader.load(./static/textures/${planetName}.jpg);
+    if (planetName === 'earth') {
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.offset.x = -11.5 / 360;
+    }
+    return texture;
+}
 let material = new THREE.MeshStandardMaterial({
     map: textureLoader.load('./static/textures/earth.jpg')
 });
@@ -87,7 +97,7 @@ scene.add(planetGrid);
 let currentPlanet = 'earth';
 // Function to switch planets
 function changePlanet(planetName) {
-    const newTexture = textureLoader.load(`./static/textures/${planetName}.jpg`);
+    const newTexture = loadPlanetTexture(planetName);
     planet.material.map = newTexture;
     planet.material.needsUpdate = true;
      // pokaż tylko markery z wybranej planety
