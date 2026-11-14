@@ -33,11 +33,9 @@ pointLight.position.set(5, 3, 5);
 scene.add(pointLight);
 
 // Main Planet Sphere
-
 const geometry = new THREE.SphereGeometry(1, 64, 64);
 const textureLoader = new THREE.TextureLoader();
-// The Earth image's prime meridian lies about 11.5 degrees left of center.
-// Shift its sampling to align it with the geographic grid and markers.
+
 function loadPlanetTexture(planetName) {
     const texture = textureLoader.load(`./static/textures/${planetName}.jpg`);
     if (planetName === 'earth') {
@@ -46,6 +44,7 @@ function loadPlanetTexture(planetName) {
     }
     return texture;
 }
+
 let material = new THREE.MeshStandardMaterial({
     map: loadPlanetTexture('earth')
 });
@@ -94,13 +93,19 @@ const gridMaterial = new THREE.MeshBasicMaterial({
 });
 const planetGrid = new THREE.Mesh(gridGeometry, gridMaterial);
 scene.add(planetGrid);
+
 let currentPlanet = 'earth';
+let selectedPoint = null; // Przechowuje punkt, w który aktualnie kliknięto
+
 // Function to switch planets
 function changePlanet(planetName) {
+    currentPlanet = planetName;
     const newTexture = loadPlanetTexture(planetName);
     planet.material.map = newTexture;
     planet.material.needsUpdate = true;
-     // pokaż tylko markery z wybranej planety
+    
+    closeInfoCard(); // Zamknij kartonik przy zmianie planety
+
     savedPoints.forEach(point => {
         point.mesh.visible = (point.planet === planetName);
     });
@@ -158,7 +163,7 @@ function vector3ToLatLon(vector) {
     };
 }
 
-function createMarkerMesh(lat, lon) {
+function createMarkerMesh(lat, lon, name, planetBody) {
     const markerGeometry = new THREE.SphereGeometry(0.015, 16, 16);
     const markerMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
     const markerMesh = new THREE.Mesh(markerGeometry, markerMaterial);
@@ -166,14 +171,46 @@ function createMarkerMesh(lat, lon) {
     const position = latLonToVector3(lat, lon, 1.005);
     markerMesh.position.copy(position);
 
+    // Zapisujemy metadane w obiekcie 3D
+    markerMesh.userData = {
+        name: name,
+        lat: lat,
+        lon: lon,
+        body: planetBody
+    };
+
     planet.add(markerMesh);
     return markerMesh;
 }
 
-// Raycasting: Click on the planet to place a point
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 
+// Pojedyncze kliknięcie otwiera okienko informacyjne po kliknięciu w kropkę
+window.addEventListener('click', (event) => {
+    if (event.target.closest('#sidebar') || event.target.closest('#right-sidebar') || event.target.closest('#ui') || event.target.closest('#point-info-card') || event.target.closest('#details-modal')) {
+        return;
+    }
+
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+    raycaster.setFromCamera(mouse, camera);
+
+    const markerMeshes = savedPoints.filter(p => p.planet === currentPlanet).map(p => p.mesh);
+    const intersectMarkers = raycaster.intersectObjects(markerMeshes);
+
+    if (intersectMarkers.length > 0) {
+        const clickedMesh = intersectMarkers[0].object;
+        selectedPoint = savedPoints.find(p => p.mesh === clickedMesh);
+        
+        if (selectedPoint) {
+            showInfoCard(selectedPoint);
+        }
+    }
+});
+
+// Podwójne kliknięcie (dblclick) służy do dodawania nowego punktu
 window.addEventListener('dblclick', (event) => {
     if (event.target.closest('#sidebar') || event.target.closest('#right-sidebar') || event.target.closest('#ui')) {
         return;
@@ -194,7 +231,11 @@ window.addEventListener('dblclick', (event) => {
         const pointName = prompt(`Enter name for location (Lat: ${coords.lat}, Lon: ${coords.lon}):`, "My Point");
         if (!pointName) return;
 
-        const markerMesh = createMarkerMesh(coords.lat, coords.lon);
+        let celestialBody = "Earth Analogue";
+        if (currentPlanet === "mars") celestialBody = "Mars Analogue";
+        if (currentPlanet === "moon") celestialBody = "Moon Analogue";
+
+        const markerMesh = createMarkerMesh(coords.lat, coords.lon, pointName, celestialBody);
 
         const newPoint = {
             id: Date.now(),
@@ -202,6 +243,7 @@ window.addEventListener('dblclick', (event) => {
             lat: coords.lat,
             lon: coords.lon,
             planet: currentPlanet,
+            body: celestialBody,
             mesh: markerMesh
         };
 
@@ -230,7 +272,11 @@ function addNewPoint() {
         return;
     }
 
-    const markerMesh = createMarkerMesh(lat, lon);
+    let celestialBody = "Earth Analogue";
+    if (currentPlanet === "mars") celestialBody = "Mars Analogue";
+    if (currentPlanet === "moon") celestialBody = "Moon Analogue";
+
+    const markerMesh = createMarkerMesh(lat, lon, name, celestialBody);
 
     const newPoint = {
         id: Date.now(),
@@ -238,6 +284,7 @@ function addNewPoint() {
         lat: lat,
         lon: lon,
         planet: currentPlanet,
+        body: celestialBody,
         mesh: markerMesh
     };
 
@@ -260,6 +307,7 @@ function deletePoint(id) {
     }
 
     savedPoints = savedPoints.filter(point => point.id !== id);
+    closeInfoCard();
     renderSavedPoints();
 }
 
@@ -278,6 +326,34 @@ function renderSavedPoints() {
             `;
             listContainer.appendChild(li);
         });
+}
+
+// --- INFO CARD & MODAL FUNCTIONS ---
+function showInfoCard(point) {
+    document.getElementById('info-name').textContent = point.name;
+    document.getElementById('info-coords').textContent = `Lat: ${point.lat}, Lon: ${point.lon}`;
+    document.getElementById('info-body').textContent = point.body;
+    document.getElementById('point-info-card').style.display = 'block';
+}
+
+function closeInfoCard() {
+    document.getElementById('point-info-card').style.display = 'none';
+    selectedPoint = null;
+}
+
+function openDetailsModal() {
+    if (!selectedPoint) return;
+    document.getElementById('modal-title').textContent = `Details for: ${selectedPoint.name}`;
+    document.getElementById('modal-desc').innerHTML = `
+        <strong>Coordinates:</strong> Latitude ${selectedPoint.lat}°, Longitude ${selectedPoint.lon}°<br>
+        <strong>Celestial Context:</strong> ${selectedPoint.body}<br><br>
+        <em>Detailed telemetry, historical logs, and exploratory data for this site.</em>
+    `;
+    document.getElementById('details-modal').style.display = 'flex';
+}
+
+function closeDetailsModal() {
+    document.getElementById('details-modal').style.display = 'none';
 }
 
 // --- ANIMATION & RESIZE ---
