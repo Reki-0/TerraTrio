@@ -283,22 +283,6 @@ button:hover {
     text-shadow: 0 2px 12px rgba(0, 255, 255, 0.6);
 }
 
-/* Superscript Circle Style */
-.trademark-circle {
-    display: inline-block;
-    font-size: 12px;
-    font-weight: normal;
-    vertical-align: super;
-    border: 1.5px solid #00ffff;
-    color: #00ffff;
-    border-radius: 50%;
-    width: 18px;
-    height: 18px;
-    text-align: center;
-    line-height: 16px;
-    margin-left: 5px;
-    box-shadow: 0 0 8px rgba(0, 255, 255, 0.4);
-}
 
 /* Przesunięcie pasków sterujących i bocznych w dół, aby nie nachodziły na tytuł */
 #ui {
@@ -317,4 +301,31 @@ button:hover {
 
 #right-sidebar {
     top: 130px; /* Prawy panel w dół */
+}
+
+/* White Info Circle in Top-Right Corner */
+#info-badge {
+    position: absolute;
+    top: 20px;
+    right: 25px;
+    width: 24px;
+    height: 24px;
+    border: 2px solid #ffffff;
+    color: #ffffff;
+    border-radius: 50%;
+    font-family: Georgia, serif; /* Szeryfowa czcionka daje klasyczny wygląd symbolu "i" */
+    font-style: italic;
+    font-weight: bold;
+    font-size: 14px;
+    text-align: center;
+    line-height: 22px;
+    z-index: 20;
+    cursor: pointer;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+    transition: transform 0.2s, background 0.2s;
+}
+
+#info-badge:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: scale(1.1);
 }
