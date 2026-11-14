@@ -403,7 +403,7 @@ const CATALOG = [
     { 
         name: 'Soil', 
         children: [
-            { name: 'Basaltic Mars ', color: '#FF5722' },
+            { name: 'Basaltic Mars', color: '#FF5722' },
             { name: 'Basaltic Moon', color: '#607D8B' },
             { name: 'Anorthosite', color: '#607D8B' }
         ] 
