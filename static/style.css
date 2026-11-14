@@ -263,29 +263,30 @@ button:hover {
     cursor: pointer;
     font-weight: bold;
 }
-/* Main Header Title Styles */
+/* Main Header Centered on Top */
 #main-header {
     position: absolute;
     top: 15px;
-    left: 20px;
+    left: 50%;
+    transform: translateX(-50%);
     z-index: 10;
     font-family: Arial, sans-serif;
-    pointer-events: none; /* Żeby nie blokowało klikania w tło, jeśli zajdzie potrzeba */
+    pointer-events: none;
 }
 
 #main-header h1 {
     margin: 0;
     color: #ffffff;
-    font-size: 26px;
+    font-size: 28px;
     font-weight: bold;
-    letter-spacing: 1px;
-    text-shadow: 0 2px 10px rgba(0, 255, 255, 0.5);
+    letter-spacing: 1.5px;
+    text-shadow: 0 2px 12px rgba(0, 255, 255, 0.6);
 }
 
 /* Superscript Circle Style */
 .trademark-circle {
     display: inline-block;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: normal;
     vertical-align: super;
     border: 1.5px solid #00ffff;
@@ -295,6 +296,25 @@ button:hover {
     height: 18px;
     text-align: center;
     line-height: 16px;
-    margin-left: 4px;
+    margin-left: 5px;
     box-shadow: 0 0 8px rgba(0, 255, 255, 0.4);
+}
+
+/* Przesunięcie pasków sterujących i bocznych w dół, aby nie nachodziły na tytuł */
+#ui {
+    position: absolute;
+    top: 70px; /* Przesunięto niżej z domyślnych ~10-20px */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    display: flex;
+    gap: 10px;
+}
+
+#sidebar {
+    top: 130px; /* Boczne menu również lekko w dół */
+}
+
+#right-sidebar {
+    top: 130px; /* Prawy panel w dół */
 }
