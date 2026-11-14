@@ -90,10 +90,14 @@ return new THREE.CanvasTexture(canvas);
 
 const gridGeometry = new THREE.SphereGeometry(1.006, 64, 64);
 const gridMaterial = new THREE.MeshBasicMaterial({
-map: createGridTexture(),
-transparent: true,
-opacity: 0.8
+    map: createGridTexture(),
+    transparent: true,
+    opacity: 0.8,
+    depthWrite: false          // <-- dodaj
 });
+const planetGrid = new THREE.Mesh(gridGeometry, gridMaterial);
+planetGrid.renderOrder = 2;    // <-- dodaj
+scene.add(planetGrid);
 const planetGrid = new THREE.Mesh(gridGeometry, gridMaterial);
 scene.add(planetGrid);
 
