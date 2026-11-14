@@ -164,7 +164,7 @@ function createMarkerMesh(lat, lon) {
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 
-window.addEventListener('click', (event) => {
+window.addEventListener('dbclick', (event) => {
     if (event.target.closest('#sidebar') || event.target.closest('#right-sidebar') || event.target.closest('#ui')) {
         return;
     }
