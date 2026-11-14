@@ -14,6 +14,8 @@ document.getElementById('canvas-container').appendChild(renderer.domElement);
 // Kontrola myszką (obracanie, przybliżanie)
 const controls = new THREE.OrbitControls(camera, renderer.domElement);
 camera.position.z = 3;
+controls.minDistance = 1.1; // Nie pozwala przybliżyć się bardziej niż 1.1 (promień planety to 1)
+controls.maxDistance = 10;  // Opcjonalnie: nie pozwala odallić się zbytnio
 
 // Światło
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
