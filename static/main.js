@@ -137,39 +137,29 @@ function toggleRotation() {
 // --- PRECISE GEO-COORDINATES & SAVED POINTS LOGIC ---
 const LONGITUDE_OFFSET = 0; 
 let savedPoints = [];
-const STORAGE_KEY = 'planetPoints_v3';
+const USER_KEY = 'userPoints_v1';          // punkty dodane przez użytkownika (nigdy nie zmieniaj)
+const DELETED_KEY = 'deletedDefaults_v1';  // punkty startowe usunięte przez użytkownika
+
+function readStorage(key) {
+    try {
+        const v = JSON.parse(localStorage.getItem(key));
+        return Array.isArray(v) ? v : [];
+    } catch (e) {
+        return [];
+    }
+}
+
+function writeStorage(key, value) {
+    try {
+        localStorage.setItem(key, JSON.stringify(value));
+    } catch (e) {}
+}
 
 function bodyLabel(planetName) {
     if (planetName === 'mars') return 'Mars Analogue';
     if (planetName === 'moon') return 'Moon Analogue';
     return 'Earth Analogue';
 }
-
-// Punkty startowe budowane z LOCATIONS
-function getDefaultPoints() {
-    const list = [];
-    for (const planetName in LOCATIONS) {
-        LOCATIONS[planetName].forEach((loc) => {
-            list.push({
-                id: Date.now() + list.length,
-                name: loc.name,
-                lat: loc.lat,
-                lon: loc.lon,
-                planet: planetName,
-                body: bodyLabel(planetName)
-            });
-        });
-    }
-    return list;
-}
-
-function saveToStorage() {
-    const data = savedPoints.map(({ id, name, lat, lon, planet, body }) => ({ id, name, lat, lon, planet, body }));
-    try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-    } catch (e) {}
-}
-
 function addPointFromData(d) {
     const body = d.body || bodyLabel(d.planet);
     const mesh = createMarkerMesh(d.lat, d.lon, d.name, body);
@@ -177,18 +167,49 @@ function addPointFromData(d) {
     savedPoints.push({ ...d, body, mesh });
 }
 
-function loadSavedPoints() {
-    let stored = null;
-    try {
-        stored = JSON.parse(localStorage.getItem(STORAGE_KEY));
-    } catch (e) {}
+// Punkty startowe z LOCATIONS, ze stałymi identyfikatorami
+function getDefaultPoints() {
+    const list = [];
+    for (const planetName in LOCATIONS) {
+        LOCATIONS[planetName].forEach((loc) => {
+            list.push({
+                id: `default:${planetName}:${loc.name}`,
+                name: loc.name,
+                lat: loc.lat,
+                lon: loc.lon,
+                planet: planetName,
+                body: bodyLabel(planetName),
+                isDefault: true
+            });
+        });
+    }
+    return list;
+}
 
-    const data = Array.isArray(stored) ? stored : getDefaultPoints();
-    data.forEach(addPointFromData);
+function saveToStorage() {
+    // punkty użytkownika
+    const userPoints = savedPoints
+        .filter(p => !p.isDefault)
+        .map(({ id, name, lat, lon, planet, body }) => ({ id, name, lat, lon, planet, body }));
+    writeStorage(USER_KEY, userPoints);
+
+    // które punkty startowe użytkownik usunął
+    const presentDefaultIds = savedPoints.filter(p => p.isDefault).map(p => p.id);
+    const deleted = getDefaultPoints().map(p => p.id).filter(id => !presentDefaultIds.includes(id));
+    writeStorage(DELETED_KEY, deleted);
+}
+
+function loadSavedPoints() {
+    const deleted = readStorage(DELETED_KEY);
+    const userPoints = readStorage(USER_KEY);
+    const defaults = getDefaultPoints().filter(p => !deleted.includes(p.id));
+
+    [...defaults, ...userPoints].forEach(addPointFromData);
 
     saveToStorage();
     renderSavedPoints();
 }
+
 function latLonToVector3(lat, lon, radius) {
     const adjustedLon = lon + LONGITUDE_OFFSET;
     const phi = (90 - lat) * (Math.PI / 180);
@@ -354,15 +375,15 @@ function addNewPoint() {
 
 // Delete saved point
 function deletePoint(id) {
-    const pointToDelete = savedPoints.find(point => point.id === id);
-    
+    const pointToDelete = savedPoints.find(point => String(point.id) === String(id));
+
     if (pointToDelete && pointToDelete.mesh) {
         planet.remove(pointToDelete.mesh);
         pointToDelete.mesh.geometry.dispose();
         pointToDelete.mesh.material.dispose();
     }
 
-    savedPoints = savedPoints.filter(point => point.id !== id);
+    savedPoints = savedPoints.filter(point => String(point.id) !== String(id));
     saveToStorage();
     closeInfoCard();
     renderSavedPoints();
@@ -379,12 +400,12 @@ function renderSavedPoints() {
             const li = document.createElement('li');
             li.innerHTML = `
                 <span><strong>${point.name}</strong><br><small>Lat: ${point.lat}, Lon: ${point.lon}</small></span>
-                <button class="delete-btn" onclick="deletePoint(${point.id})">Delete</button>
+                <button class="delete-btn">Delete</button>
             `;
+            li.querySelector('.delete-btn').addEventListener('click', () => deletePoint(point.id));
             listContainer.appendChild(li);
         });
 }
-
 // --- INFO CARD & MODAL FUNCTIONS ---
 function showInfoCard(point) {
     document.getElementById('info-name').textContent = point.name;
