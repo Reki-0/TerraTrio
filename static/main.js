@@ -95,9 +95,9 @@ const gridMaterial = new THREE.MeshBasicMaterial({
     opacity: 0.8,
     depthWrite: false          // <-- dodaj
 });
-planetGrid.renderOrder = 2;    // <-- dodaj
-const planetGrid = new THREE.Mesh(gridGeometry, gridMaterial);
 
+const planetGrid = new THREE.Mesh(gridGeometry, gridMaterial);
+planetGrid.renderOrder = 2; 
 scene.add(planetGrid);
 
 planet.position.y = -0.05;
@@ -503,24 +503,32 @@ li.appendChild(head);
 // lista podkategorii
 const ul = document.createElement('ul');
 ul.className = 'sub-list';
+// lista podkategorii
+const ul = document.createElement('ul');
+ul.className = 'sub-list';
 cat.children.forEach(sub => {
-const key = catalogKey(cat.name, sub);
+    // sub to teraz obiekt { name: '...', color: '...' }
+    const key = catalogKey(cat.name, sub.name);
 
-const item = document.createElement('li');
-const btn = document.createElement('button');
-btn.type = 'button';
-btn.className = 'sub-btn';
-btn.setAttribute('aria-pressed', selectedSubs.has(key));
-btn.innerHTML = `<span class="box"></span><span>${sub}</span>`;
-btn.addEventListener('click', () => {
-if (selectedSubs.has(key)) selectedSubs.delete(key);
-else selectedSubs.add(key);
-onCatalogChange();
-});
+    const item = document.createElement('li');
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'sub-btn';
+    btn.setAttribute('aria-pressed', selectedSubs.has(key));
+    
+    // Zmieniamy na sub.name oraz dodajemy kolor bezpośrednio do tekstu:
+    btn.innerHTML = `<span class="box"></span><span style="color: ${sub.color};">${sub.name}</span>`;
+    
+    btn.addEventListener('click', () => {
+        if (selectedSubs.has(key)) selectedSubs.delete(key);
+        else selectedSubs.add(key);
+        onCatalogChange();
+    });
 
-item.appendChild(btn);
-ul.appendChild(item);
+    item.appendChild(btn);
+    ul.appendChild(item);
 });
+li.appendChild(ul);
 li.appendChild(ul);
 
 root.appendChild(li);
