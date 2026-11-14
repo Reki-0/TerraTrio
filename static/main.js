@@ -26,14 +26,14 @@ scene.add(pointLight);
 const geometry = new THREE.SphereGeometry(1, 64, 64);
 const textureLoader = new THREE.TextureLoader();
 let material = new THREE.MeshStandardMaterial({
-    map: textureLoader.load('static/textures/earth.jpg') // Upewnij się, że masz ten plik!
+    map: textureLoader.load('./static/textures/earth.jpg') // Upewnij się, że masz ten plik!
 });
 const planet = new THREE.Mesh(geometry, material);
 scene.add(planet);
 
 // Funkcja zmiany planety
 function changePlanet(planetName) {
-    const newTexture = textureLoader.load(`static/textures/${planetName}.jpg`);
+    const newTexture = textureLoader.load(`./static/textures/${planetName}.jpg`);
     planet.material.map = newTexture;
     planet.material.needsUpdate = true;
     
