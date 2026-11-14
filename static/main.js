@@ -239,7 +239,7 @@ function vector3ToLatLon(vector) {
 }
 
 function createMarkerMesh(lat, lon, name, planetBody) {
-    const markerGeometry = new THREE.SphereGeometry(0.015, 10, 10);
+    const markerGeometry = new THREE.SphereGeometry(0.015, 16, 16);
     const markerMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
     const markerMesh = new THREE.Mesh(markerGeometry, markerMaterial);
 
