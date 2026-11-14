@@ -88,7 +88,7 @@ function createGridTexture() {
     return new THREE.CanvasTexture(canvas);
 }
 
-const gridGeometry = new THREE.SphereGeometry(1.003, 64, 64);
+const gridGeometry = new THREE.SphereGeometry(1.006, 64, 64);
 const gridMaterial = new THREE.MeshBasicMaterial({
     map: createGridTexture(),
     transparent: true,
@@ -119,6 +119,7 @@ function changePlanet(planetName) {
     
     const currentData = LOCATIONS[planetName] || [];
     console.log(`Loaded points for ${planetName}:`, currentData);
+    updateOverlays();
 }
 
 
@@ -413,7 +414,7 @@ const CATALOG = [
     { name: 'Terrain Type',          children: ['Volcanic', 'Desert', 'Polar'] },
     { name: 'Temperature',           children: ['Below -50°C', '-50 to 0°C', '0 to 25°C', 'Above 25°C'] },
     { name: 'Wind and Dust',         children: ['Calm', 'Moderate', 'Strong', 'Dust storms'] },
-    { name: 'Ice',                   children: [' Polygon Terrain', 'glacial features'] },
+    { name: 'Ice',                   children: ['Polygon Terrain', 'Glacial features'] },
     { name: 'Biology',               children: ['Extremophiles', 'Microbial mats', 'Lichens'] },
     { name: 'Subsurface structures', children: ['Lava tubes', 'Caves', 'Aquifers'] }
 ];
@@ -481,7 +482,7 @@ function renderCatalog() {
 
 function onCatalogChange() {
     renderCatalog();
-
+    updateOverlays();
     const n = selectedSubs.size;
     document.getElementById('catalog-count').textContent =
         n === 0 ? 'No filters' : `${n} selected`;
@@ -501,6 +502,62 @@ function initCatalog() {
         });
     }
     if (document.getElementById('catalog')) renderCatalog();
+}
+// --- MAP OVERLAYS (PNG layers for selected subcategories) ---
+const OVERLAY_RADIUS = 1.003;   // 0.003 powyżej powierzchni planety (promień planety = 1)
+const OVERLAY_OPACITY = 0.85;
+const OVERLAY_OFFSET_X = -11.5/360;     // jeśli mapy są przesunięte względem siatki, spróbuj -11.5 / 360
+
+// "Kategoria::Podkategoria" -> plik PNG (folder: static/overlays/<planeta>/)
+const OVERLAY_FILES = {
+    'Soil::Basaltic':            'soil_basaltic.png',
+    'Terrain Type::Desert':      'terrain_desert.png',
+};
+
+const overlayLayers = {};   // cache: "planeta|klucz" -> mesh
+
+function getOverlayLayer(key) {
+    const file = OVERLAY_FILES[key];
+    if (!file) return null;
+
+    const cacheKey = currentPlanet + '|' + key;
+    if (overlayLayers[cacheKey]) return overlayLayers[cacheKey];
+
+    const texture = textureLoader.load(
+        `./static/overlays/${currentPlanet}/${file}`,
+        undefined,
+        undefined,
+        () => console.warn('Missing overlay file:', currentPlanet, file)
+    );
+    if (OVERLAY_OFFSET_X) {
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.offset.x = OVERLAY_OFFSET_X;
+    }
+
+    const mesh = new THREE.Mesh(
+        new THREE.SphereGeometry(OVERLAY_RADIUS, 64, 64),
+        new THREE.MeshBasicMaterial({
+            map: texture,
+            transparent: true,
+            opacity: OVERLAY_OPACITY,
+            depthWrite: false      // przezroczyste warstwy nie przykrywają się nawzajem
+        })
+    );
+    mesh.renderOrder = 1;
+    planet.add(mesh);              // jako dziecko planety obraca się razem z nią
+    overlayLayers[cacheKey] = mesh;
+    return mesh;
+}
+
+function updateOverlays() {
+    // najpierw ukryj wszystkie
+    Object.values(overlayLayers).forEach(m => { m.visible = false; });
+
+    // potem pokaż tylko wybrane podkategorie dla aktualnej planety
+    selectedSubs.forEach(key => {
+        const layer = getOverlayLayer(key);
+        if (layer) layer.visible = true;
+    });
 }
 // --- INFO CARD & MODAL FUNCTIONS ---
 function showInfoCard(point) {
