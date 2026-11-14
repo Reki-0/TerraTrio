@@ -330,3 +330,6 @@ button:hover {
     top: 125px;
 }
 
+#ui button {
+    min-width: 130px; 
+}
