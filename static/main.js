@@ -69,6 +69,33 @@ function selectCategory(categoryName) {
 // Array to store user custom saved points
 let savedPoints = [];
 
+// Helper function to convert Latitude & Longitude into 3D coordinates (x, y, z) on a sphere
+function latLonToVector3(lat, lon, radius) {
+    const phi = (90 - lat) * (Math.PI / 180);
+    const theta = (lon + 180) * (Math.PI / 180);
+
+    const x = -(radius * Math.sin(phi) * Math.cos(theta));
+    const z = (radius * Math.sin(phi) * Math.sin(theta));
+    const y = (radius * Math.cos(phi));
+
+    return new THREE.Vector3(x, y, z);
+}
+
+// Function to create a red 3D dot marker on the planet
+function createMarkerMesh(lat, lon) {
+    const markerGeometry = new THREE.SphereGeometry(0.015, 16, 16); // Small sphere size
+    const markerMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 }); // Bright red color
+    const markerMesh = new THREE.Mesh(markerGeometry, markerMaterial);
+
+    // Position the marker slightly above the surface (radius = 1.005)
+    const position = latLonToVector3(lat, lon, 1.005);
+    markerMesh.position.copy(position);
+
+    // Attach directly to the planet mesh so it rotates with the globe
+    planet.add(markerMesh);
+    return markerMesh;
+}
+
 // Function to add a new point from the right sidebar form
 function addNewPoint() {
     const nameInput = document.getElementById('pointName');
@@ -84,29 +111,46 @@ function addNewPoint() {
         return;
     }
 
+    if (lat < -90 || lat > 90 || lon < -180 || lon > 180) {
+        alert("Latitude must be between -90 and 90, Longitude between -180 and 180.");
+        return;
+    }
+
+    // Create the 3D red dot on the planet
+    const markerMesh = createMarkerMesh(lat, lon);
+
     const newPoint = {
-        id: Date.now(), // unique identifier based on timestamp
+        id: Date.now(),
         name: name,
         lat: lat,
-        lon: lon
+        lon: lon,
+        mesh: markerMesh // Store reference to the 3D object for later deletion
     };
 
     savedPoints.push(newPoint);
     renderSavedPoints();
 
-    // Clear input fields after adding
+    // Clear input fields
     nameInput.value = '';
     latInput.value = '';
     lonInput.value = '';
 }
 
-// Function to delete a saved point by its ID
+// Function to delete a saved point and remove its red dot from the 3D globe
 function deletePoint(id) {
+    const pointToDelete = savedPoints.find(point => point.id === id);
+    
+    if (pointToDelete && pointToDelete.mesh) {
+        planet.remove(pointToDelete.mesh); // Remove 3D marker from the planet
+        pointToDelete.mesh.geometry.dispose();
+        pointToDelete.mesh.material.dispose();
+    }
+
     savedPoints = savedPoints.filter(point => point.id !== id);
     renderSavedPoints();
 }
 
-// Function to update the HTML list of saved points
+// Function to update the HTML list in the right sidebar
 function renderSavedPoints() {
     const listContainer = document.getElementById('saved-points-list');
     listContainer.innerHTML = '';
