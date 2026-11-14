@@ -97,8 +97,8 @@ const gridMaterial = new THREE.MeshBasicMaterial({
 const planetGrid = new THREE.Mesh(gridGeometry, gridMaterial);
 scene.add(planetGrid);
 
-planet.position.y = 0.15;
-planetGrid.position.y = 0.15;
+planet.position.y = 0.10;
+planetGrid.position.y = 0.10;
 
 let currentPlanet = 'earth';
 let selectedPoint = null; // Przechowuje punkt, w który aktualnie kliknięto
