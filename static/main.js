@@ -58,3 +58,9 @@ window.addEventListener('resize', () => {
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
 });
+
+// Obsługa kliknięcia w kategorie w bocznym menu
+function selectCategory(categoryName) {
+    console.log("Wybrano kategorię:", categoryName);
+    
+}
