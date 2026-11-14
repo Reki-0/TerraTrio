@@ -403,7 +403,7 @@ const CATALOG = [
     { 
         name: 'Soil', 
         children: [
-            { name: 'Basaltic', color: '#ff5722' },
+            { name: 'Basaltic', color: '#FF5722' },
             { name: 'Basaltic', color: '#ff7043' },
             { name: 'Anorthosite', color: '#ffab91' }
         ] 
@@ -411,37 +411,37 @@ const CATALOG = [
     { 
         name: 'Terrain Type', 
         children: [
-            { name: 'Volcanic', color: '#e91e63' },
-            { name: 'Desert', color: '#9c27b0' },
-            { name: 'Polar', color: '#673ab7' }
+            { name: 'Volcanic', color: '#FFFFFF' },
+            { name: 'Desert', color: '#FFFFFF' },
+            { name: 'Polar', color: '#FFFFFF' }
         ] 
     },
     { 
         name: 'Temperature', 
         children: [
-            { name: 'Below -40°C', color: '#03a9f4' },
+            { name: 'Below -40°C', color: '#FF5722' },
             { name: 'Above 40°C', color: '#ffeb3b' }
         ] 
     },
     { 
         name: 'Wind and Dust', 
         children: [
-            { name: 'Aeolian landforms', color: '#cddc39' },
-            { name: 'Dust & Dust storms', color: '#ffc107' },
+            { name: 'Aeolian landforms', color: '#FF5722' },
+            { name: 'Dust & Dust storms', color: '#FF5722' },
         ] 
     },
     { 
         name: 'Ice', 
         children: [
-            { name: 'Polygon Terrain', color: '#00e5ff' },
-            { name: 'Glacial features', color: '#b388ff' }
+            { name: 'Polygon Terrain', color: '#FF5722' },
+            { name: 'Glacial features', color: '#FF5722' }
         ] 
     },
     { 
         name: 'AstroBiology', 
         children: [
             {name: 'Moon', color: '#00e5ff' },
-            {name: 'Mars', color: '#00e5ff' },
+            {name: 'Mars', color: '#FF5722' },
        
         ] 
     },
