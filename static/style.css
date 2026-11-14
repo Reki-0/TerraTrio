@@ -168,7 +168,6 @@ button:hover {
 #saved-points-list button.delete-btn:hover {
     background: #c82333;
 }
-/* Point Info Card Styles */
 #point-info-card {
     position: absolute;
     bottom: 30px;
@@ -209,11 +208,6 @@ button:hover {
     border-radius: 5px;
     cursor: pointer;
     font-weight: bold;
-    transition: background 0.3s;
-}
-
-#point-info-card button:hover {
-    background: #0056b3;
 }
 
 #point-info-card .close-btn {
@@ -221,16 +215,14 @@ button:hover {
     top: 10px;
     right: 12px;
     background: transparent;
-    color: white;
+    color: #ff4d4d;
     border: none;
     font-size: 20px;
     width: auto;
     padding: 0;
     cursor: pointer;
-    color: #ff4d4d;
 }
 
-/* Detailed Data Modal Window Styles */
 #details-modal {
     position: fixed;
     top: 0;
@@ -261,11 +253,6 @@ button:hover {
     color: #00ffff;
 }
 
-.modal-content p {
-    color: #dcdcdc;
-    line-height: 1.5;
-}
-
 .modal-content button {
     margin-top: 20px;
     padding: 10px 20px;
@@ -275,8 +262,4 @@ button:hover {
     border-radius: 5px;
     cursor: pointer;
     font-weight: bold;
-}
-
-.modal-content button:hover {
-    background: #c82333;
 }
