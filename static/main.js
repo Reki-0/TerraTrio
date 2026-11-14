@@ -47,7 +47,7 @@ function loadPlanetTexture(planetName) {
     return texture;
 }
 let material = new THREE.MeshStandardMaterial({
-    map: textureLoader.load('./static/textures/earth.jpg')
+    map: loadPlanetTexture('earth')
 });
 const planet = new THREE.Mesh(geometry, material);
 scene.add(planet);
