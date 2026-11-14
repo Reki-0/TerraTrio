@@ -492,12 +492,16 @@ function onCatalogChange() {
     if (typeof applyCatalogFilter === 'function') applyCatalogFilter();
 }
 
-document.getElementById('catalog-clear').addEventListener('click', () => {
-    selectedSubs.clear();
-    onCatalogChange();
-});
-
-renderCatalog();
+function initCatalog() {
+    const clearBtn = document.getElementById('catalog-clear');
+    if (clearBtn) {
+        clearBtn.addEventListener('click', () => {
+            selectedSubs.clear();
+            onCatalogChange();
+        });
+    }
+    if (document.getElementById('catalog')) renderCatalog();
+}
 // --- INFO CARD & MODAL FUNCTIONS ---
 function showInfoCard(point) {
     document.getElementById('info-name').textContent = point.name;
@@ -545,4 +549,7 @@ window.addEventListener('resize', () => {
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
 });
-loadSavedPoints();
+window.addEventListener('DOMContentLoaded', () => {
+    initCatalog();
+    loadSavedPoints();
+});
