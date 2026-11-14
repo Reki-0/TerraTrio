@@ -440,7 +440,7 @@ const CATALOG = [
     { 
         name: 'AstroBiology', 
         children: [
-            {name: 'Moon", color: '#00e5ff' },
+            {name: 'Moon', color: '#00e5ff' },
             {name: 'Mars', color: '#00e5ff' },
        
         ] 
