@@ -13,18 +13,6 @@ const LOCATIONS = {
         { name: "Sea of Tranquility", lat: 0.67, lon: 23.47, info: "Apollo 11 landing site", category: "missions" }
     ]
 };
-// Location data categories
-const LOCATIONS = {
-    "earth": [
-        { name: "Warsaw", lat: 52.23, lon: 21.01, info: "Capital of Poland", category: "bases" }
-    ],
-    "mars": [
-        { name: "Olympus Mons", lat: 18.65, lon: 226.2, info: "Largest volcano in the Solar System", category: "volcanoes" }
-    ],
-    "moon": [
-        { name: "Sea of Tranquility", lat: 0.67, lon: 23.47, info: "Apollo 11 landing site", category: "missions" }
-    ]
-};
 
 // Scene, Camera & Renderer setup
 const scene = new THREE.Scene();
