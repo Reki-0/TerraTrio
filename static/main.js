@@ -128,7 +128,7 @@ function selectCategory(categoryName) {
 // --- PRECISE GEO-COORDINATES & SAVED POINTS LOGIC ---
 
 let savedPoints = [];
-const LONGITUDE_OFFSET = -2; 
+const LONGITUDE_OFFSET = -4; 
 
 function latLonToVector3(lat, lon, radius) {
     // Uwzględnienie offsetu tekstury
