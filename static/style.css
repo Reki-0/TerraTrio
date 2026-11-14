@@ -385,3 +385,55 @@ button:hover {
     visibility: visible;
     transform: translateY(0);
 }
+#sidebar {
+    max-height: calc(100vh - 160px);
+    overflow-y: auto;
+}
+
+#catalog { list-style: none; padding: 0; margin: 0; }
+#catalog li { margin-bottom: 4px; }
+
+#catalog .cat-btn {
+    display: flex; justify-content: space-between; align-items: center;
+    width: 100%; margin: 0; padding: 8px 10px;
+    background: transparent; border: none; border-radius: 4px;
+    color: #b0c4de; font-size: 14px; text-align: left; cursor: pointer;
+}
+#catalog .cat-btn:hover { background: rgba(255, 255, 255, 0.15); color: #fff; }
+#catalog .chev { transition: transform 0.2s; font-size: 18px; }
+#catalog li.open > .cat-btn .chev { transform: rotate(90deg); }
+
+#catalog .cat-badge {
+    margin-left: 8px; padding: 1px 7px; border-radius: 999px;
+    background: #00ffff; color: #06101c; font-size: 11px; font-weight: bold;
+}
+
+#catalog .sub-list {
+    display: none;
+    list-style: none; margin: 2px 0 6px 10px; padding: 0 0 0 8px;
+    border-left: 1px solid rgba(255, 255, 255, 0.2);
+}
+#catalog li.open > .sub-list { display: block; }
+
+#catalog .sub-btn {
+    display: flex; align-items: center; gap: 8px;
+    width: 100%; margin: 0; padding: 6px 8px;
+    background: transparent; border: none; border-radius: 4px;
+    color: #b0c4de; font-size: 13px; text-align: left; cursor: pointer;
+}
+#catalog .sub-btn:hover { background: rgba(255, 255, 255, 0.12); color: #fff; }
+#catalog .sub-btn[aria-pressed="true"] { background: rgba(0, 255, 255, 0.15); color: #fff; }
+
+#catalog .sub-btn .box {
+    flex: 0 0 12px; width: 12px; height: 12px;
+    border: 1px solid #b0c4de; border-radius: 3px;
+}
+#catalog .sub-btn[aria-pressed="true"] .box { background: #00ffff; border-color: #00ffff; }
+
+#catalog-footer {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 12px; padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    font-size: 13px; color: #b0c4de;
+}
+#catalog-clear { margin: 0; padding: 4px 10px; font-size: 12px; }
