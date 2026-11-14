@@ -263,7 +263,7 @@ button:hover {
     cursor: pointer;
     font-weight: bold;
 }
-/* Main Header Centered on Top */
+/* --- MAIN HEADER & TITLE --- */
 #main-header {
     position: absolute;
     top: 15px;
@@ -271,7 +271,8 @@ button:hover {
     transform: translateX(-50%);
     z-index: 10;
     font-family: Arial, sans-serif;
-    pointer-events: none;
+    text-align: center;
+    pointer-events: none; /* Pozwala klikać "przez" nagłówek w tło */
 }
 
 #main-header h1 {
@@ -283,27 +284,7 @@ button:hover {
     text-shadow: 0 2px 12px rgba(0, 255, 255, 0.6);
 }
 
-
-/* Przesunięcie pasków sterujących i bocznych w dół, aby nie nachodziły na tytuł */
-#ui {
-    position: absolute;
-    top: 70px; /* Przesunięto niżej z domyślnych ~10-20px */
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 10;
-    display: flex;
-    gap: 10px;
-}
-
-#sidebar {
-    top: 130px; /* Boczne menu również lekko w dół */
-}
-
-#right-sidebar {
-    top: 130px; /* Prawy panel w dół */
-}
-
-/* White Info Circle in Top-Right Corner */
+/* --- WHITE INFO BADGE (TOP RIGHT) --- */
 #info-badge {
     position: absolute;
     top: 20px;
@@ -313,7 +294,7 @@ button:hover {
     border: 2px solid #ffffff;
     color: #ffffff;
     border-radius: 50%;
-    font-family: Georgia, serif; /* Szeryfowa czcionka daje klasyczny wygląd symbolu "i" */
+    font-family: Georgia, serif;
     font-style: italic;
     font-weight: bold;
     font-size: 14px;
@@ -329,3 +310,23 @@ button:hover {
     background: rgba(255, 255, 255, 0.15);
     transform: scale(1.1);
 }
+
+/* --- UI CONTROLS & SIDEBARS POSITIONING --- */
+#ui {
+    position: absolute;
+    top: 65px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    display: flex;
+    gap: 10px;
+}
+
+#sidebar {
+    top: 125px;
+}
+
+#right-sidebar {
+    top: 125px;
+}
+
