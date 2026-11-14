@@ -1,3 +1,17 @@
+const LOCATIONS = {
+    "earth": [
+        { name: "Warsaw",       lat: 52.23, lon: 21.01,   info: "Capital of Poland", category: "bases" },
+        { name: "Mauna Kea",    lat: 19.82, lon: -155.47, info: "Volcano in Hawaii", category: "volcanoes" },
+        { name: "Atacama",      lat: -24.5, lon: -69.25,  info: "Driest desert",     category: "terrain" }
+    ],
+    "mars": [
+        { name: "Olympus Mons", lat: 18.65, lon: 226.2,   info: "Largest volcano in the Solar System", category: "volcanoes" },
+        { name: "Jezero Crater", lat: 18.38, lon: 77.58,  info: "Perseverance landing site",           category: "missions" }
+    ],
+    "moon": [
+        { name: "Sea of Tranquility", lat: 0.67, lon: 23.47, info: "Apollo 11 landing site", category: "missions" }
+    ]
+};
 // Location data categories
 const LOCATIONS = {
     "earth": [
