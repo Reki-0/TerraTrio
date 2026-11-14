@@ -1,17 +1,17 @@
-
+// Location data categories
 const LOCATIONS = {
-"earth": [
-{ name: "Tellnes Ilmenite Deposit",       lat: 58.20, lon: 6.25,   info: "y", category: "y" },
-{ name: "Rajmahal Traps",    lat: 24.15, lon: 87.30, info: "Volcano in Hawaii", category: "volcanoes" },
-{ name: "Darhad Depression",      lat: 51.10, lon: 99.30,  info: "Driest desert",     category: "terrain" }
-],
-"mars": [
-{ name: "Olympus Mons", lat: 18.65, lon: 226.2,   info: "Largest volcano in the Solar System", category: "volcanoes" },
-{ name: "Jezero Crater", lat: 18.38, lon: 77.58,  info: "Perseverance landing site",           category: "missions" }
-],
-"moon": [
-{ name: "Sea of Tranquility", lat: 0.67, lon: 23.47, info: "Apollo 11 landing site", category: "missions" }
-]
+    "earth": [
+        { name: "Tellnes Ilmenite Deposit", lat: 58.20, lon: 6.25, info: "y", category: "y" },
+        { name: "Rajmahal Traps", lat: 24.15, lon: 87.30, info: "Volcano in Hawaii", category: "volcanoes" },
+        { name: "Darhad Depression", lat: 51.10, lon: 99.30, info: "Driest desert", category: "terrain" }
+    ],
+    "mars": [
+        { name: "Olympus Mons", lat: 18.65, lon: 226.2, info: "Largest volcano in the Solar System", category: "volcanoes" },
+        { name: "Jezero Crater", lat: 18.38, lon: 77.58, info: "Perseverance landing site", category: "missions" }
+    ],
+    "moon": [
+        { name: "Sea of Tranquility", lat: 0.67, lon: 23.47, info: "Apollo 11 landing site", category: "missions" }
+    ]
 };
 
 // Scene, Camera & Renderer setup
@@ -27,6 +27,7 @@ const controls = new THREE.OrbitControls(camera, renderer.domElement);
 controls.minDistance = 1.1;
 controls.maxDistance = 10;
 camera.position.z = 3;
+controls.enablePan = false; 
 
 // Lighting
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
@@ -40,52 +41,51 @@ const geometry = new THREE.SphereGeometry(1, 64, 64);
 const textureLoader = new THREE.TextureLoader();
 
 function loadPlanetTexture(planetName) {
-const texture = textureLoader.load(`./static/textures/${planetName}.jpg`);
-if (planetName === 'earth') {
-texture.wrapS = THREE.RepeatWrapping;
-texture.offset.x = -11.5 / 360;
-}
-return texture;
+    const texture = textureLoader.load(`./static/textures/${planetName}.jpg`);
+    if (planetName === 'earth') {
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.offset.x = -11.5 / 360;
+    }
+    return texture;
 }
 
 let material = new THREE.MeshStandardMaterial({
-map: loadPlanetTexture('earth')
+    map: loadPlanetTexture('earth')
 });
 const planet = new THREE.Mesh(geometry, material);
 scene.add(planet);
-controls.enablePan = false; 
 
 // --- LATITUDE & LONGITUDE GRID OVERLAY ---
 function createGridTexture() {
-const canvas = document.createElement('canvas');
-canvas.width = 2048;
-canvas.height = 1024;
-const ctx = canvas.getContext('2d');
+    const canvas = document.createElement('canvas');
+    canvas.width = 2048;
+    canvas.height = 1024;
+    const ctx = canvas.getContext('2d');
 
-ctx.clearRect(0, 0, canvas.width, canvas.height);
-ctx.strokeStyle = 'rgba(0, 255, 255, 0.25)';
-ctx.lineWidth = 1.5;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.strokeStyle = 'rgba(0, 255, 255, 0.25)';
+    ctx.lineWidth = 1.5;
 
-const stepsLat = 12;
-const stepsLon = 24;
+    const stepsLat = 12;
+    const stepsLon = 24;
 
-for (let i = 1; i < stepsLat; i++) {
-const y = (canvas.height / stepsLat) * i;
-ctx.beginPath();
-ctx.moveTo(0, y);
-ctx.lineTo(canvas.width, y);
-ctx.stroke();
-}
+    for (let i = 1; i < stepsLat; i++) {
+        const y = (canvas.height / stepsLat) * i;
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvas.width, y);
+        ctx.stroke();
+    }
 
-for (let i = 0; i < stepsLon; i++) {
-const x = (canvas.width / stepsLon) * i;
-ctx.beginPath();
-ctx.moveTo(x, 0);
-ctx.lineTo(x, canvas.height);
-ctx.stroke();
-}
+    for (let i = 0; i < stepsLon; i++) {
+        const x = (canvas.width / stepsLon) * i;
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, canvas.height);
+        ctx.stroke();
+    }
 
-return new THREE.CanvasTexture(canvas);
+    return new THREE.CanvasTexture(canvas);
 }
 
 const gridGeometry = new THREE.SphereGeometry(1.006, 64, 64);
@@ -93,35 +93,32 @@ const gridMaterial = new THREE.MeshBasicMaterial({
     map: createGridTexture(),
     transparent: true,
     opacity: 0.8,
-    depthWrite: false          // <-- dodaj
+    depthWrite: false
 });
-
 const planetGrid = new THREE.Mesh(gridGeometry, gridMaterial);
-planetGrid.renderOrder = 2; 
+planetGrid.renderOrder = 2;
 scene.add(planetGrid);
 
+// Przesunięcie planety i siatki w pionie
 planet.position.y = -0.05;
 planetGrid.position.y = -0.05;
 
 let currentPlanet = 'earth';
-let selectedPoint = null; // Przechowuje punkt, w który aktualnie kliknięto
+let selectedPoint = null;
 
 // Function to switch planets
 function changePlanet(planetName) {
-currentPlanet = planetName;
-const newTexture = loadPlanetTexture(planetName);
-planet.material.map = newTexture;
-planet.material.needsUpdate = true;
+    currentPlanet = planetName;
+    const newTexture = loadPlanetTexture(planetName);
+    planet.material.map = newTexture;
+    planet.material.needsUpdate = true;
 
-closeInfoCard(); // Zamknij kartonik przy zmianie planety
+    closeInfoCard();
 
-savedPoints.forEach(point => {
-point.mesh.visible = (point.planet === planetName);
-});
-renderSavedPoints();
-
-const currentData = LOCATIONS[planetName] || [];
-console.log(`Loaded points for ${planetName}:`, currentData);
+    savedPoints.forEach(point => {
+        point.mesh.visible = (point.planet === planetName);
+    });
+    renderSavedPoints();
     updateOverlays();
 }
 
@@ -129,284 +126,279 @@ console.log(`Loaded points for ${planetName}:`, currentData);
 let isRotating = true;
 
 function toggleRotation() {
-isRotating = !isRotating;
-const btn = document.getElementById('rotBtn');
-if (btn) {
-btn.textContent = isRotating ? "Pause Rotation" : "Resume Rotation";
-}
+    isRotating = !isRotating;
+    const btn = document.getElementById('rotBtn');
+    if (btn) {
+        btn.textContent = isRotating ? "Pause Rotation" : "Resume Rotation";
+    }
 }
 
 // --- PRECISE GEO-COORDINATES & SAVED POINTS LOGIC ---
 const LONGITUDE_OFFSET = 0; 
 let savedPoints = [];
-const USER_KEY = 'userPoints_v1';          // punkty dodane przez użytkownika (nigdy nie zmieniaj)
-const DELETED_KEY = 'deletedDefaults_v1';  // punkty startowe usunięte przez użytkownika
+const USER_KEY = 'userPoints_v1';
+const DELETED_KEY = 'deletedDefaults_v1';
 
 function readStorage(key) {
-try {
-const v = JSON.parse(localStorage.getItem(key));
-return Array.isArray(v) ? v : [];
-} catch (e) {
-return [];
+    try {
+        const v = JSON.parse(localStorage.getItem(key));
+        return Array.isArray(v) ? v : [];
+    } catch (e) {
+        return [];
+    }
 }
-}
+
 function writeStorage(key, value) {
-try {
-localStorage.setItem(key, JSON.stringify(value));
-} catch (e) {}
+    try {
+        localStorage.setItem(key, JSON.stringify(value));
+    } catch (e) {}
 }
 
 function bodyLabel(planetName) {
-if (planetName === 'mars') return 'Mars Analogue';
-if (planetName === 'moon') return 'Moon Analogue';
-return 'Earth Analogue';
-}
-function addPointFromData(d) {
-const body = d.body || bodyLabel(d.planet);
-const mesh = createMarkerMesh(d.lat, d.lon, d.name, body);
-mesh.visible = (d.planet === currentPlanet);
-savedPoints.push({ ...d, body, mesh });
+    if (planetName === 'mars') return 'Mars Analogue';
+    if (planetName === 'moon') return 'Moon Analogue';
+    return 'Earth Analogue';
 }
 
-// Punkty startowe z LOCATIONS, ze stałymi identyfikatorami
-function getDefaultPoints() {
-const list = [];
-for (const planetName in LOCATIONS) {
-LOCATIONS[planetName].forEach((loc) => {
-list.push({
-id: `default:${planetName}:${loc.name}`,
-name: loc.name,
-lat: loc.lat,
-lon: loc.lon,
-planet: planetName,
-body: bodyLabel(planetName),
-isDefault: true
-});
-});
+function addPointFromData(d) {
+    const body = d.body || bodyLabel(d.planet);
+    const mesh = createMarkerMesh(d.lat, d.lon, d.name, body);
+    mesh.visible = (d.planet === currentPlanet);
+    savedPoints.push({ ...d, body, mesh });
 }
-return list;
+
+function getDefaultPoints() {
+    const list = [];
+    for (const planetName in LOCATIONS) {
+        LOCATIONS[planetName].forEach((loc) => {
+            list.push({
+                id: `default:${planetName}:${loc.name}`,
+                name: loc.name,
+                lat: loc.lat,
+                lon: loc.lon,
+                planet: planetName,
+                body: bodyLabel(planetName),
+                isDefault: true
+            });
+        });
+    }
+    return list;
 }
 
 function saveToStorage() {
-// punkty użytkownika
-const userPoints = savedPoints
-.filter(p => !p.isDefault)
-.map(({ id, name, lat, lon, planet, body }) => ({ id, name, lat, lon, planet, body }));
-writeStorage(USER_KEY, userPoints);
+    const userPoints = savedPoints
+        .filter(p => !p.isDefault)
+        .map(({ id, name, lat, lon, planet, body }) => ({ id, name, lat, lon, planet, body }));
+    writeStorage(USER_KEY, userPoints);
 
-// które punkty startowe użytkownik usunął
-const presentDefaultIds = savedPoints.filter(p => p.isDefault).map(p => p.id);
-const deleted = getDefaultPoints().map(p => p.id).filter(id => !presentDefaultIds.includes(id));
-writeStorage(DELETED_KEY, deleted);
+    const presentDefaultIds = savedPoints.filter(p => p.isDefault).map(p => p.id);
+    const deleted = getDefaultPoints().map(p => p.id).filter(id => !presentDefaultIds.includes(id));
+    writeStorage(DELETED_KEY, deleted);
 }
 
 function loadSavedPoints() {
-const deleted = readStorage(DELETED_KEY);
-const userPoints = readStorage(USER_KEY);
-const defaults = getDefaultPoints().filter(p => !deleted.includes(p.id));
+    const deleted = readStorage(DELETED_KEY);
+    const userPoints = readStorage(USER_KEY);
+    const defaults = getDefaultPoints().filter(p => !deleted.includes(p.id));
 
-[...defaults, ...userPoints].forEach(addPointFromData);
-saveToStorage();
-renderSavedPoints();
+    [...defaults, ...userPoints].forEach(addPointFromData);
+    saveToStorage();
+    renderSavedPoints();
 }
 
 function latLonToVector3(lat, lon, radius) {
-const adjustedLon = lon + LONGITUDE_OFFSET;
-const phi = (90 - lat) * (Math.PI / 180);
-const theta = (adjustedLon + 180) * (Math.PI / 180); 
+    const adjustedLon = lon + LONGITUDE_OFFSET;
+    const phi = (90 - lat) * (Math.PI / 180);
+    const theta = (adjustedLon + 180) * (Math.PI / 180); 
 
-const x = -radius * Math.sin(phi) * Math.cos(theta);
-const z = radius * Math.sin(phi) * Math.sin(theta);
-const y = radius * Math.cos(phi);
+    const x = -radius * Math.sin(phi) * Math.cos(theta);
+    const z = radius * Math.sin(phi) * Math.sin(theta);
+    const y = radius * Math.cos(phi);
 
-return new THREE.Vector3(x, y, z);
+    return new THREE.Vector3(x, y, z);
 }
 
 function vector3ToLatLon(vector) {
-const normalized = vector.clone().normalize();
-const lat = 90 - (Math.acos(normalized.y) * 180 / Math.PI);
-let lon = (Math.atan2(normalized.z, -normalized.x) * 180 / Math.PI) - 180;
+    const normalized = vector.clone().normalize();
+    const lat = 90 - (Math.acos(normalized.y) * 180 / Math.PI);
+    let lon = (Math.atan2(normalized.z, -normalized.x) * 180 / Math.PI) - 180;
 
-lon -= LONGITUDE_OFFSET;
+    lon -= LONGITUDE_OFFSET;
 
-while (lon > 180) lon -= 360;
-while (lon < -180) lon += 360;
+    while (lon > 180) lon -= 360;
+    while (lon < -180) lon += 360;
 
-return { 
-lat: parseFloat(lat.toFixed(2)), 
-lon: parseFloat(lon.toFixed(2)) 
-};
+    return { 
+        lat: parseFloat(lat.toFixed(2)), 
+        lon: parseFloat(lon.toFixed(2)) 
+    };
 }
 
 function createMarkerMesh(lat, lon, name, planetBody) {
-const markerGeometry = new THREE.SphereGeometry(0.015, 16, 16);
-const markerMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-const markerMesh = new THREE.Mesh(markerGeometry, markerMaterial);
+    const markerGeometry = new THREE.SphereGeometry(0.015, 16, 16);
+    const markerMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+    const markerMesh = new THREE.Mesh(markerGeometry, markerMaterial);
 
-const position = latLonToVector3(lat, lon, 1.005);
-markerMesh.position.copy(position);
+    const position = latLonToVector3(lat, lon, 1.005);
+    markerMesh.position.copy(position);
 
-// Zapisujemy metadane w obiekcie 3D
-markerMesh.userData = {
-name: name,
-lat: lat,
-lon: lon,
-body: planetBody
-};
+    markerMesh.userData = {
+        name: name,
+        lat: lat,
+        lon: lon,
+        body: planetBody
+    };
 
-planet.add(markerMesh);
-return markerMesh;
+    planet.add(markerMesh);
+    return markerMesh;
 }
 
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 
-// Pojedyncze kliknięcie otwiera okienko informacyjne po kliknięciu w kropkę
 window.addEventListener('click', (event) => {
-if (event.target.closest('#sidebar') || event.target.closest('#right-sidebar') || event.target.closest('#ui') || event.target.closest('#point-info-card') || event.target.closest('#details-modal')) {
-return;
-}
+    if (event.target.closest('#sidebar') || event.target.closest('#right-sidebar') || event.target.closest('#ui') || event.target.closest('#point-info-card') || event.target.closest('#details-modal') || event.target.closest('#info-badge')) {
+        return;
+    }
 
-mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
-raycaster.setFromCamera(mouse, camera);
+    raycaster.setFromCamera(mouse, camera);
 
-const markerMeshes = savedPoints.filter(p => p.planet === currentPlanet).map(p => p.mesh);
-const intersectMarkers = raycaster.intersectObjects(markerMeshes);
+    const markerMeshes = savedPoints.filter(p => p.planet === currentPlanet).map(p => p.mesh);
+    const intersectMarkers = raycaster.intersectObjects(markerMeshes);
 
-if (intersectMarkers.length > 0) {
-const clickedMesh = intersectMarkers[0].object;
-selectedPoint = savedPoints.find(p => p.mesh === clickedMesh);
+    if (intersectMarkers.length > 0) {
+        const clickedMesh = intersectMarkers[0].object;
+        selectedPoint = savedPoints.find(p => p.mesh === clickedMesh);
 
-if (selectedPoint) {
-showInfoCard(selectedPoint);
-}
-}
+        if (selectedPoint) {
+            showInfoCard(selectedPoint);
+        }
+    }
 });
 
-// Podwójne kliknięcie (dblclick) służy do dodawania nowego punktu
 window.addEventListener('dblclick', (event) => {
-if (event.target.closest('#sidebar') || event.target.closest('#right-sidebar') || event.target.closest('#ui')) {
-return;
-}
+    if (event.target.closest('#sidebar') || event.target.closest('#right-sidebar') || event.target.closest('#ui')) {
+        return;
+    }
 
-mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
-raycaster.setFromCamera(mouse, camera);
-const intersects = raycaster.intersectObject(planet);
+    raycaster.setFromCamera(mouse, camera);
+    const intersects = raycaster.intersectObject(planet);
 
-if (intersects.length > 0) {
-const intersectPoint = intersects[0].point;
-planet.worldToLocal(intersectPoint);
+    if (intersects.length > 0) {
+        const intersectPoint = intersects[0].point;
+        planet.worldToLocal(intersectPoint);
 
-const coords = vector3ToLatLon(intersectPoint);
+        const coords = vector3ToLatLon(intersectPoint);
 
-const pointName = prompt(`Enter name for location (Lat: ${coords.lat}, Lon: ${coords.lon}):`, "My Point");
-if (!pointName) return;
+        const pointName = prompt(`Enter name for location (Lat: ${coords.lat}, Lon: ${coords.lon}):`, "My Point");
+        if (!pointName) return;
 
-let celestialBody = "Earth Analogue";
-if (currentPlanet === "mars") celestialBody = "Mars Analogue";
-if (currentPlanet === "moon") celestialBody = "Moon Analogue";
+        let celestialBody = "Earth Analogue";
+        if (currentPlanet === "mars") celestialBody = "Mars Analogue";
+        if (currentPlanet === "moon") celestialBody = "Moon Analogue";
 
-const markerMesh = createMarkerMesh(coords.lat, coords.lon, pointName, celestialBody);
+        const markerMesh = createMarkerMesh(coords.lat, coords.lon, pointName, celestialBody);
 
-const newPoint = {
-id: Date.now(),
-name: pointName,
-lat: coords.lat,
-lon: coords.lon,
-planet: currentPlanet,
-body: celestialBody,
-mesh: markerMesh
-};
+        const newPoint = {
+            id: Date.now(),
+            name: pointName,
+            lat: coords.lat,
+            lon: coords.lon,
+            planet: currentPlanet,
+            body: celestialBody,
+            mesh: markerMesh
+        };
 
-savedPoints.push(newPoint);
-saveToStorage();
-renderSavedPoints();
-}
+        savedPoints.push(newPoint);
+        saveToStorage();
+        renderSavedPoints();
+    }
 });
 
-// Add point manually via right sidebar form
 function addNewPoint() {
-const nameInput = document.getElementById('pointName');
-const latInput = document.getElementById('pointLat');
-const lonInput = document.getElementById('pointLon');
+    const nameInput = document.getElementById('pointName');
+    const latInput = document.getElementById('pointLat');
+    const lonInput = document.getElementById('pointLon');
 
-const name = nameInput.value.trim();
-const lat = parseFloat(latInput.value);
-const lon = parseFloat(lonInput.value);
+    const name = nameInput.value.trim();
+    const lat = parseFloat(latInput.value);
+    const lon = parseFloat(lonInput.value);
 
-if (!name || isNaN(lat) || isNaN(lon)) {
-alert("Please fill in all fields with valid values!");
-return;
+    if (!name || isNaN(lat) || isNaN(lon)) {
+        alert("Please fill in all fields with valid values!");
+        return;
+    }
+
+    if (lat < -90 || lat > 90 || lon < -180 || lon > 180) {
+        alert("Latitude must be between -90 and 90, Longitude between -180 and 180.");
+        return;
+    }
+
+    let celestialBody = "Earth Analogue";
+    if (currentPlanet === "mars") celestialBody = "Mars Analogue";
+    if (currentPlanet === "moon") celestialBody = "Moon Analogue";
+
+    const markerMesh = createMarkerMesh(lat, lon, name, celestialBody);
+
+    const newPoint = {
+        id: Date.now(),
+        name: name,
+        lat: lat,
+        lon: lon,
+        planet: currentPlanet,
+        body: celestialBody,
+        mesh: markerMesh
+    };
+
+    savedPoints.push(newPoint);
+    saveToStorage();
+    renderSavedPoints();
+
+    nameInput.value = '';
+    latInput.value = '';
+    lonInput.value = '';
 }
 
-if (lat < -90 || lat > 90 || lon < -180 || lon > 180) {
-alert("Latitude must be between -90 and 90, Longitude between -180 and 180.");
-return;
-}
-
-let celestialBody = "Earth Analogue";
-if (currentPlanet === "mars") celestialBody = "Mars Analogue";
-if (currentPlanet === "moon") celestialBody = "Moon Analogue";
-
-const markerMesh = createMarkerMesh(lat, lon, name, celestialBody);
-
-const newPoint = {
-id: Date.now(),
-name: name,
-lat: lat,
-lon: lon,
-planet: currentPlanet,
-body: celestialBody,
-mesh: markerMesh
-};
-
-savedPoints.push(newPoint);
-saveToStorage();
-renderSavedPoints();
-
-nameInput.value = '';
-latInput.value = '';
-lonInput.value = '';
-}
-
-// Delete saved point
 function deletePoint(id) {
-const pointToDelete = savedPoints.find(point => String(point.id) === String(id));
+    const pointToDelete = savedPoints.find(point => String(point.id) === String(id));
 
-if (pointToDelete && pointToDelete.mesh) {
-planet.remove(pointToDelete.mesh);
-pointToDelete.mesh.geometry.dispose();
-pointToDelete.mesh.material.dispose();
+    if (pointToDelete && pointToDelete.mesh) {
+        planet.remove(pointToDelete.mesh);
+        pointToDelete.mesh.geometry.dispose();
+        pointToDelete.mesh.material.dispose();
+    }
+
+    savedPoints = savedPoints.filter(point => String(point.id) !== String(id));
+    saveToStorage();
+    closeInfoCard();
+    renderSavedPoints();
 }
 
-savedPoints = savedPoints.filter(point => String(point.id) !== String(id));
-saveToStorage();
-closeInfoCard();
-renderSavedPoints();
-}
-
-// Render HTML list in right sidebar
 function renderSavedPoints() {
-const listContainer = document.getElementById('saved-points-list');
-listContainer.innerHTML = '';
+    const listContainer = document.getElementById('saved-points-list');
+    if (!listContainer) return;
+    listContainer.innerHTML = '';
 
-savedPoints
-.filter(point => point.planet === currentPlanet)
-.forEach(point => {
-const li = document.createElement('li');
-li.innerHTML = `
+    savedPoints
+        .filter(point => point.planet === currentPlanet)
+        .forEach(point => {
+            const li = document.createElement('li');
+            li.innerHTML = `
                <span><strong>${point.name}</strong><br><small>Lat: ${point.lat}, Lon: ${point.lon}</small></span>
                <button class="delete-btn">Delete</button>
-           `;
-li.querySelector('.delete-btn').addEventListener('click', () => deletePoint(point.id));
-listContainer.appendChild(li);
-});
+            `;
+            li.querySelector('.delete-btn').addEventListener('click', () => deletePoint(point.id));
+            listContainer.appendChild(li);
+        });
 }
-// --- INTERACTIVE CATALOG ---
+
+// --- INTERACTIVE CATALOG (z obsługą kolorów podkategorii) ---
 const CATALOG = [
     { 
         name: 'Soil', 
@@ -466,110 +458,102 @@ const CATALOG = [
         ] 
     }
 ];
-const selectedSubs = new Set();      // wybrane podkategorie, klucze "Kategoria::Podkategoria"
-const openCategories = new Set();    // rozwinięte kategorie
+
+const selectedSubs = new Set();
+const openCategories = new Set();
 
 function catalogKey(cat, sub) {
-return cat + '::' + sub;
+    return cat + '::' + sub;
 }
 
 function renderCatalog() {
-const root = document.getElementById('catalog');
-root.innerHTML = '';
+    const root = document.getElementById('catalog');
+    if (!root) return;
+    root.innerHTML = '';
 
-CATALOG.forEach(cat => {
-const isOpen = openCategories.has(cat.name);
-const selectedCount = cat.children.filter(s => selectedSubs.has(catalogKey(cat.name, s))).length;
+    CATALOG.forEach(cat => {
+        const isOpen = openCategories.has(cat.name);
+        const selectedCount = cat.children.filter(s => selectedSubs.has(catalogKey(cat.name, s.name))).length;
 
-const li = document.createElement('li');
-if (isOpen) li.classList.add('open');
+        const li = document.createElement('li');
+        if (isOpen) li.classList.add('open');
 
-// nagłówek kategorii
-const head = document.createElement('button');
-head.type = 'button';
-head.className = 'cat-btn';
-head.setAttribute('aria-expanded', isOpen);
-head.innerHTML = `
+        const head = document.createElement('button');
+        head.type = 'button';
+        head.className = 'cat-btn';
+        head.setAttribute('aria-expanded', isOpen);
+        head.innerHTML = `
            <span>${cat.name}${selectedCount ? `<span class="cat-badge">${selectedCount}</span>` : ''}</span>
            <span class="chev">›</span>
-       `;
-head.addEventListener('click', () => {
-if (openCategories.has(cat.name)) openCategories.delete(cat.name);
-else openCategories.add(cat.name);
-renderCatalog();
-});
-li.appendChild(head);
+        `;
+        head.addEventListener('click', () => {
+            if (openCategories.has(cat.name)) openCategories.delete(cat.name);
+            else openCategories.add(cat.name);
+            renderCatalog();
+        });
+        li.appendChild(head);
 
-// lista podkategorii
-const ul = document.createElement('ul');
-ul.className = 'sub-list';
-// lista podkategorii
-const ul = document.createElement('ul');
-ul.className = 'sub-list';
-cat.children.forEach(sub => {
-    // sub to teraz obiekt { name: '...', color: '...' }
-    const key = catalogKey(cat.name, sub.name);
+        const ul = document.createElement('ul');
+        ul.className = 'sub-list';
+        
+        cat.children.forEach(sub => {
+            const key = catalogKey(cat.name, sub.name);
 
-    const item = document.createElement('li');
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'sub-btn';
-    btn.setAttribute('aria-pressed', selectedSubs.has(key));
-    
-    // Zmieniamy na sub.name oraz dodajemy kolor bezpośrednio do tekstu:
-    btn.innerHTML = `<span class="box"></span><span style="color: ${sub.color};">${sub.name}</span>`;
-    
-    btn.addEventListener('click', () => {
-        if (selectedSubs.has(key)) selectedSubs.delete(key);
-        else selectedSubs.add(key);
-        onCatalogChange();
+            const item = document.createElement('li');
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'sub-btn';
+            btn.setAttribute('aria-pressed', selectedSubs.has(key));
+            
+            // Kolorowy tekst podkategorii
+            btn.innerHTML = `<span class="box"></span><span style="color: ${sub.color};">${sub.name}</span>`;
+            
+            btn.addEventListener('click', () => {
+                if (selectedSubs.has(key)) selectedSubs.delete(key);
+                else selectedSubs.add(key);
+                onCatalogChange();
+            });
+
+            item.appendChild(btn);
+            ul.appendChild(item);
+        });
+        li.appendChild(ul);
+
+        root.appendChild(li);
     });
-
-    item.appendChild(btn);
-    ul.appendChild(item);
-});
-li.appendChild(ul);
-li.appendChild(ul);
-
-root.appendChild(li);
-});
 }
 
 function onCatalogChange() {
-renderCatalog();
-
+    renderCatalog();
     updateOverlays();
-const n = selectedSubs.size;
-document.getElementById('catalog-count').textContent =
-n === 0 ? 'No filters' : `${n} selected`;
-
-console.log('Selected:', [...selectedSubs]);
-
-// opcjonalnie: filtrowanie punktów (krok 4)
-if (typeof applyCatalogFilter === 'function') applyCatalogFilter();
+    const n = selectedSubs.size;
+    const countEl = document.getElementById('catalog-count');
+    if (countEl) {
+        countEl.textContent = n === 0 ? 'No filters' : `${n} selected`;
+    }
 }
 
 function initCatalog() {
-const clearBtn = document.getElementById('catalog-clear');
-if (clearBtn) {
-clearBtn.addEventListener('click', () => {
-selectedSubs.clear();
-onCatalogChange();
-});
+    const clearBtn = document.getElementById('catalog-clear');
+    if (clearBtn) {
+        clearBtn.addEventListener('click', () => {
+            selectedSubs.clear();
+            onCatalogChange();
+        });
+    }
+    renderCatalog();
 }
-if (document.getElementById('catalog')) renderCatalog();
-}
-// --- MAP OVERLAYS (PNG layers for selected subcategories) ---
-const OVERLAY_RADIUS = 1.003;   // 0.003 powyżej powierzchni planety (promień planety = 1)
-const OVERLAY_OPACITY = 0.85;
-const OVERLAY_OFFSET_X = -11.5/360;     // jeśli mapy są przesunięte względem siatki, spróbuj -11.5 / 360
 
-// "Kategoria::Podkategoria" -> plik PNG (folder: static/overlays/<planeta>/)
+// --- MAP OVERLAYS ---
+const OVERLAY_RADIUS = 1.003;
+const OVERLAY_OPACITY = 0.85;
+const OVERLAY_OFFSET_X = -11.5/360;
+
 const OVERLAY_FILES = {
-    'Terrain Type::Desert':      'terrain_desert.png',
+    'Terrain Type::Desert': 'terrain_desert.png',
 };
 
-const overlayLayers = {};   // cache: "planeta|klucz" -> mesh
+const overlayLayers = {};
 
 function getOverlayLayer(key) {
     const file = OVERLAY_FILES[key];
@@ -595,73 +579,72 @@ function getOverlayLayer(key) {
             map: texture,
             transparent: true,
             opacity: OVERLAY_OPACITY,
-            depthWrite: false      // przezroczyste warstwy nie przykrywają się nawzajem
+            depthWrite: false
         })
     );
     mesh.renderOrder = 1;
-    planet.add(mesh);              // jako dziecko planety obraca się razem z nią
+    planet.add(mesh);
     overlayLayers[cacheKey] = mesh;
     return mesh;
 }
 
 function updateOverlays() {
-    // najpierw ukryj wszystkie
     Object.values(overlayLayers).forEach(m => { m.visible = false; });
-
-    // potem pokaż tylko wybrane podkategorie dla aktualnej planety
     selectedSubs.forEach(key => {
         const layer = getOverlayLayer(key);
         if (layer) layer.visible = true;
     });
 }
+
 // --- INFO CARD & MODAL FUNCTIONS ---
 function showInfoCard(point) {
-document.getElementById('info-name').textContent = point.name;
-document.getElementById('info-coords').textContent = `Lat: ${point.lat}, Lon: ${point.lon}`;
-document.getElementById('info-body').textContent = point.body;
-document.getElementById('point-info-card').style.display = 'block';
+    document.getElementById('info-name').textContent = point.name;
+    document.getElementById('info-coords').textContent = `Lat: ${point.lat}, Lon: ${point.lon}`;
+    document.getElementById('info-body').textContent = point.body;
+    document.getElementById('point-info-card').style.display = 'block';
 }
 
 function closeInfoCard() {
-document.getElementById('point-info-card').style.display = 'none';
-selectedPoint = null;
+    document.getElementById('point-info-card').style.display = 'none';
+    selectedPoint = null;
 }
 
 function openDetailsModal() {
-if (!selectedPoint) return;
-document.getElementById('modal-title').textContent = `Details for: ${selectedPoint.name}`;
-document.getElementById('modal-desc').innerHTML = `
+    if (!selectedPoint) return;
+    document.getElementById('modal-title').textContent = `Details for: ${selectedPoint.name}`;
+    document.getElementById('modal-desc').innerHTML = `
        <strong>Coordinates:</strong> Latitude ${selectedPoint.lat}°, Longitude ${selectedPoint.lon}°<br>
        <strong>Celestial Context:</strong> ${selectedPoint.body}<br><br>
        <em>Detailed telemetry, historical logs, and exploratory data for this site.</em>
-   `;
-document.getElementById('details-modal').style.display = 'flex';
+    `;
+    document.getElementById('details-modal').style.display = 'flex';
 }
 
 function closeDetailsModal() {
-document.getElementById('details-modal').style.display = 'none';
+    document.getElementById('details-modal').style.display = 'none';
 }
 
 // --- ANIMATION & RESIZE ---
 function animate() {
-requestAnimationFrame(animate);
+    requestAnimationFrame(animate);
 
-if (isRotating) {
-planet.rotation.y += 0.001;
-planetGrid.rotation.y += 0.001;
-}
+    if (isRotating) {
+        planet.rotation.y += 0.001;
+        planetGrid.rotation.y += 0.001;
+    }
 
-controls.update();
-renderer.render(scene, camera);
+    controls.update();
+    renderer.render(scene, camera);
 }
 animate();
 
 window.addEventListener('resize', () => {
-camera.aspect = window.innerWidth / window.innerHeight;
-camera.updateProjectionMatrix();
-renderer.setSize(window.innerWidth, window.innerHeight);
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
 });
+
 window.addEventListener('DOMContentLoaded', () => {
-initCatalog();
-loadSavedPoints();
+    initCatalog();
+    loadSavedPoints();
 });
