@@ -328,6 +328,58 @@ button:hover {
 
 #right-sidebar {
     top: 125px;
+
+#info-badge {
+    cursor: help;
+}
+
+#info-tooltip {
+    position: fixed;
+    top: 64px;
+    right: 20px;
+    width: 300px;
+    max-width: calc(100vw - 40px);
+    box-sizing: border-box;
+    padding: 16px 18px;
+    background: rgba(13, 13, 26, 0.96);
+    border: 1px solid #2a3348;
+    border-radius: 12px;
+    color: #e0e0e0;
+    font-size: 14px;
+    line-height: 1.5;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-6px);
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+}
+
+#info-tooltip strong {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 16px;
+    color: #ffffff;
+}
+
+#info-tooltip p {
+    margin: 0 0 8px;
+}
+
+#info-tooltip p:last-child {
+    margin-bottom: 0;
+}
+
+/* pokazuje się po najechaniu, po wejściu klawiaturą (Tab) i po kliknięciu (telefon) */
+#info-badge:hover + #info-tooltip,
+#info-badge:focus + #info-tooltip,
+#info-badge.open + #info-tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
 }
 
 #ui button {
