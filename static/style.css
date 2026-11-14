@@ -328,14 +328,20 @@ button:hover {
 
 #right-sidebar {
     top: 125px;
+}
 
+#ui button {
+    min-width: 130px;
+}
+
+/* --- INFO TOOLTIP (pokazuje się po najechaniu na "i") --- */
 #info-badge {
     cursor: help;
 }
 
 #info-tooltip {
     position: fixed;
-    top: 64px;
+    top: 56px;
     right: 20px;
     width: 300px;
     max-width: calc(100vw - 40px);
@@ -372,16 +378,10 @@ button:hover {
     margin-bottom: 0;
 }
 
-/* pokazuje się po najechaniu, po wejściu klawiaturą (Tab) i po kliknięciu (telefon) */
 #info-badge:hover + #info-tooltip,
 #info-badge:focus + #info-tooltip,
 #info-badge.open + #info-tooltip {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
-}
-}
-
-#ui button {
-    min-width: 130px; 
 }
