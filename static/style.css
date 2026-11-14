@@ -457,16 +457,20 @@ button:hover {
     font-size: 13px; color: #b0c4de;
 }
 #catalog-clear { margin: 0; padding: 4px 10px; font-size: 12px; }
-/* Przycisk Pause/Resume Rotation - czysty biały styl */
+/* Przycisk Pause/Resume Rotation – półprzezroczysty z podświetleniem jak planety */
 #rotBtn {
-    background: #ffffff !important;
-    color: #000000 !important;
-    border: 2px solid #ffffff !important;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid white;
+    cursor: pointer;
+    border-radius: 5px;
     font-weight: bold;
+    transition: background 0.3s, transform 0.2s;
 }
 
 #rotBtn:hover {
-    background: rgba(255, 255, 255, 0.8) !important;
+    background: rgba(255, 255, 255, 0.5);
+    transform: translateY(-2px);
 }
 
 /* Przycisk czyszczenia filtrów (#catalog-clear) - styl czarno-biały */
