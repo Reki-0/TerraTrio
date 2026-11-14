@@ -31,7 +31,7 @@ button {
 #ui button:nth-child(1) { background: rgba(33, 150, 243, 0.4); border-color: #2196F3; } /* Earth - Niebieski */
 #ui button:nth-child(2) { background: rgba(255, 87, 34, 0.4); border-color: #FF5722; }  /* Mars - Pomarańczowy */
 #ui button:nth-child(3) { background: rgba(96, 125, 139, 0.4); border-color: #607D8B; } /* Moon - Szaro-niebieski */
-#ui button:nth-child(4) { background: rgba(156, 39, 176, 0.4); border-color: #9C27B0; } /* Pause - Fioletowy */
+#ui button:nth-child(4) { background: rgba(156, 39, 176, 0.4); border-color: #FFFFFF; } 
 
 /* Efekt po najechaniu myszką (jaśniejsze tło) */
 #ui button:hover {
