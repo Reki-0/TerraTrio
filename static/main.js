@@ -404,8 +404,8 @@ const CATALOG = [
         name: 'Soil', 
         children: [
             { name: 'Basaltic', color: '#FF5722' },
-            { name: 'Basaltic', color: '#ff7043' },
-            { name: 'Anorthosite', color: '#ffab91' }
+            { name: 'Basaltic', color: '#607D8B' },
+            { name: 'Anorthosite', color: '#607D8B' }
         ] 
     },
     { 
@@ -419,8 +419,8 @@ const CATALOG = [
     { 
         name: 'Temperature', 
         children: [
-            { name: 'Below -40°C', color: '#FF5722' },
-            { name: 'Above 40°C', color: '#ffeb3b' }
+            { name: 'Below -40°C', color: '#FFFFFF' },
+            { name: 'Above 40°C', color: '#607D8B' }
         ] 
     },
     { 
@@ -440,7 +440,7 @@ const CATALOG = [
     { 
         name: 'AstroBiology', 
         children: [
-            {name: 'Moon', color: '#00e5ff' },
+            {name: 'Moon', color: '#607D8B' },
             {name: 'Mars', color: '#FF5722' },
        
         ] 
@@ -448,8 +448,8 @@ const CATALOG = [
     { 
         name: 'Subsurface structures', 
         children: [
-            { name: 'Lava tubes', color: '#607d8b' },
-            { name: 'Caves', color: '#9e9e9e' },
+            { name: 'Lava tubes', color: '#FFFFFF' },
+            { name: 'Caves', color: '#FF5722' },
          
         ] 
     }
