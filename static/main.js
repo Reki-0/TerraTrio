@@ -549,7 +549,6 @@ const OVERLAY_FILES = {
     'Terrain Type::Desert': 'terrain_desert.png',
     'Soil Type::Basaltic': 'soil_basaltic.png',
 };
-
 const overlayLayers = {};
 
 function getOverlayLayer(key) {
