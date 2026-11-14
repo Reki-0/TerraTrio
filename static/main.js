@@ -39,7 +39,7 @@ const textureLoader = new THREE.TextureLoader();
 // The Earth image's prime meridian lies about 11.5 degrees left of center.
 // Shift its sampling to align it with the geographic grid and markers.
 function loadPlanetTexture(planetName) {
-    const texture = textureLoader.load(./static/textures/${planetName}.jpg);
+    const texture = textureLoader.load(`./static/textures/${planetName}.jpg`);
     if (planetName === 'earth') {
         texture.wrapS = THREE.RepeatWrapping;
         texture.offset.x = -11.5 / 360;
