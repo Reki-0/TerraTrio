@@ -126,38 +126,45 @@ function selectCategory(categoryName) {
 // --- PRECISE GEO-COORDINATES & SAVED POINTS LOGIC ---
 
 let savedPoints = [];
+const LONGITUDE_OFFSET = 0; 
 
-// Helper function with precise real-world alignment for Equirectangular maps
 function latLonToVector3(lat, lon, radius) {
-    const phi = (90 - lat) * (Math.PI / 180);
+    // Uwzględnienie offsetu tekstury
+    const adjustedLon = lon + LONGITUDE_OFFSET;
     
-    // Exact alignment correction for standard Earth/Planet equirectangular textures 
-    // where lon = 0 is at the center of the image.
-    const theta = (lon + 90) * (Math.PI / 180); 
+    const phi = (90 - lat) * (Math.PI / 180);
+    const theta = (adjustedLon + 180) * (Math.PI / 180); 
 
-    const x = radius * Math.sin(phi) * Math.cos(theta);
+    // Standardowe, matematycznie poprawne mapowanie sferyczne dla Three.js
+    const x = -radius * Math.sin(phi) * Math.cos(theta);
     const z = radius * Math.sin(phi) * Math.sin(theta);
     const y = radius * Math.cos(phi);
 
     return new THREE.Vector3(x, y, z);
 }
 
-// Helper function to convert 3D point back to exact real-world Latitude & Longitude
 function vector3ToLatLon(vector) {
     const normalized = vector.clone().normalize();
     const lat = 90 - (Math.acos(normalized.y) * 180 / Math.PI);
     
-    let lon = (Math.atan2(normalized.z, normalized.x) * 180 / Math.PI) - 90;
+    let lon = (Math.atan2(normalized.z, -normalized.x) * 180 / Math.PI) - 180;
 
-    // Normalize longitude to -180 to 180 range
-    if (lon > 180) lon -= 360;
-    if (lon < -180) lon += 360;
+    // Odejmujemy ten sam offset przy przeliczaniu kliknięcia myszką
+    lon -= LONGITUDE_OFFSET;
+
+    // Normalizacja do zakresu -180 do 180
+    while (lon > 180) lon -= 360;
+    while (lon < -180) lon += 360;
 
     return { 
         lat: parseFloat(lat.toFixed(2)), 
         lon: parseFloat(lon.toFixed(2)) 
     };
 }
+
+    
+
+
 
 // Function to create a red 3D dot marker on the planet
 function createMarkerMesh(lat, lon) {
