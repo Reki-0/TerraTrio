@@ -48,5 +48,22 @@
         <!-- Saved points will appear here dynamically -->
     </ul>
 </div>
+    <!-- Point Info Popup Card -->
+<div id="point-info-card" style="display: none;">
+    <button class="close-btn" onclick="closeInfoCard()">×</button>
+    <h3 id="info-name">Point Name</h3>
+    <p><strong>Coordinates:</strong> <span id="info-coords">Lat: 0, Lon: 0</span></p>
+    <p><strong>Celestial Body:</strong> <span id="info-body">Earth</span></p>
+    <button onclick="openDetailsModal()">View Detailed Data</button>
+</div>
+
+<!-- Detailed Data Modal Window -->
+<div id="details-modal" style="display: none;">
+    <div class="modal-content">
+        <h2 id="modal-title">Detailed Information</h2>
+        <p id="modal-desc">Here you can display extended scientific data, exploration history, atmospheric composition, or geological features of this specific location.</p>
+        <button onclick="closeDetailsModal()">Close Window</button>
+    </div>
+</div>
 </body>
 </html>
