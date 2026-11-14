@@ -32,6 +32,8 @@ let material = new THREE.MeshStandardMaterial({
 });
 const planet = new THREE.Mesh(geometry, material);
 scene.add(planet);
+controls.target.set(0, 0, 0);
+controls.enablePan = false;   
 
 // --- LATITUDE & LONGITUDE GRID OVERLAY ---
 
