@@ -93,9 +93,10 @@ const gridMaterial = new THREE.MeshBasicMaterial({
     map: createGridTexture(),
     transparent: true,
     opacity: 0.8,
+    depthWrite: false          // <-- dodaj
+});
 const planetGrid = new THREE.Mesh(gridGeometry, gridMaterial);
-scene.add(planetGrid);
-const planetGrid = new THREE.Mesh(gridGeometry, gridMaterial);
+
 scene.add(planetGrid);
 
 planet.position.y = -0.05;
