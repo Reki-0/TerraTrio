@@ -487,3 +487,21 @@ button:hover {
 }
 #details-modal .modal-content { max-height: 85vh; overflow-y: auto; }
 .details-text { font-style: italic; line-height: 1.5; }
+/* Link do GitHuba w lewym dolnym rogu */
+#github-link {
+    position: fixed;
+    left: 20px;
+    bottom: 10px;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #b0c4de;
+    font-size: 13px;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+#github-link:hover {
+    color: #00ffff;
+}
