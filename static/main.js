@@ -617,17 +617,10 @@ function openDetailsModal() {
     document.getElementById('modal-desc').innerHTML = `
        <strong>Coordinates:</strong> Latitude ${selectedPoint.lat}°, Longitude ${selectedPoint.lon}°<br>
        <strong>Celestial Context:</strong> ${selectedPoint.body}<br><br>
-      function openDetailsModal() {
-    if (!selectedPoint) return;
-    document.getElementById('modal-title').textContent = `Details for: ${selectedPoint.name}`;
-    document.getElementById('modal-desc').innerHTML = `
-       <strong>Coordinates:</strong> Latitude ${selectedPoint.lat}°, Longitude ${selectedPoint.lon}°<br>
-       <strong>Celestial Context:</strong> ${selectedPoint.body}<br><br>
        <div class="details-text">${(selectedPoint.details || 'Brak szczegółowego opisu dla tego punktu.').replace(/\n/g, '<br>')}</div>
     `;
     document.getElementById('details-modal').style.display = 'flex';
 }
-
 function closeDetailsModal() {
     document.getElementById('details-modal').style.display = 'none';
 }
