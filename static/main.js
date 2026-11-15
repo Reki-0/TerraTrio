@@ -1,7 +1,11 @@
 // Location data categories
 const LOCATIONS = {
     "earth": [
-        { name: "Tellnes Ilmenite Deposit", lat: 58.20, lon: 6.25, info: "y", category: "y" },
+        { name: "Tellnes Ilmenite Deposit", lat: 58.20, lon: 6.25, info: "y", category: "y",
+  details: `Tu wpisz długi opis.
+
+Drugi akapit opisu...
+Trzeci akapit...`  },
         { name: "Rajmahal Traps", lat: 24.15, lon: 87.30, info: "Volcano in Hawaii", category: "volcanoes" },
         { name: "Darhad Depression", lat: 51.10, lon: 99.30, info: "Driest desert", category: "terrain" }
     ],
