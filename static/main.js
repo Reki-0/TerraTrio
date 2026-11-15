@@ -7,27 +7,57 @@ Similarity to the Moon:
 Mineralogical similarity to lunar regolith, the presence of ilmenite.
 
 Description of the region:
-
 Tellnes is a large geological deposit located in southwestern Norway. It consists of ilmenite-rich norite, a rock containing substantial amounts of ilmenite, plagioclase and pyroxene. The deposit is valuable because of its high concentration of titanium-bearing minerals. Its mineral composition makes it suitable for investigating technologies used to separate and process oxygen-bearing minerals.
 
 Corresponding conditions on the Moon:
-
 Lunar regolith contains ilmenite, particularly in some basaltic lunar regions. This mineral is important for future lunar resource utilisation because it contains oxygen chemically bound to iron and titanium. It may also provide titanium for industrial applications. Extracting these resources could reduce the need to transport oxygen and raw materials from Earth.
 
-Comparison – similarities and differences:
-
+Comparison similarities and differences:
 Both locations contain ilmenite and other minerals associated with basaltic geological materials. This makes Tellnes particularly relevant for investigating mineral processing and oxygen extraction technologies. However, Tellnes is a concentrated geological ore deposit, whereas lunar regolith is a heterogeneous mixture of minerals, impact fragments and extremely fine particles. Lunar ilmenite concentrations also vary significantly depending on the geological region.
 
 Potential applications for permanent lunar bases:
-
 Testing mineral separation and concentration systems.
 Investigating oxygen extraction from ilmenite.
 Testing technologies for recovering titanium and iron.
 Evaluating the efficiency of processing lunar mineral resources.
 Developing systems for producing useful materials from local geological deposits.
 The most important application is the development of technologies that could produce oxygen directly from lunar regolith. Oxygen would be needed for astronaut life support and could also contribute to producing rocket propellant when combined with hydrogen.`  },
-        { name: "Rajmahal Traps", lat: 24.15, lon: 87.30, info: "Volcano in Hawaii", category: "volcanoes" },
-        { name: "Darhad Depression", lat: 51.10, lon: 99.30, info: "Driest desert", category: "terrain" }
+        { name: "Rajmahal Traps", lat: 24.15, lon: 87.30, info: "Volcano in Hawaii", category: "volcanoes", details:`Mineralogical and geological similarity to lunar soil 
+
+Description of the region:
+The Rajmahal Traps are a large volcanic region. It consists predominantly of basaltic rocks containing minerals such as augite, pigeonite, plagioclase, ilmenite, hematite and olivine. These rocks are relatively dry and have a chemical composition rich in iron, magnesium, calcium and silica. 
+
+Corresponding conditions on the Moon:
+Lunar maria are extensive basaltic plains formed by ancient volcanic activity. Lunar regolith contains minerals such as pyroxene, plagioclase, olivine and ilmenite, as well as agglutinates formed through repeated meteorite impacts. These materials contain oxygen chemically bound within their mineral structures, making them potential resources for oxygen production.
+
+Comparison – similarities and differences:
+Both regions contain basaltic materials with similar mineral components, particularly pyroxene, plagioclase, olivine and titanium-bearing minerals. However, Rajmahal rocks have undergone terrestrial weathering and erosion, whereas lunar regolith has been exposed to meteorite impacts, solar radiation and the space environment. Lunar soil also contains agglutinates and impact-generated materials that are not naturally reproduced in Rajmahal. Therefore, the region is a useful mineralogical analogue, but not an exact substitute for lunar regolith.
+
+Potential applications for permanent lunar bases and space exploration:
+Testing drills and robotic excavation equipment.
+Investigating mineral separation and processing technologies.
+Testing systems for extracting oxygen from minerals.
+Evaluating the production of construction materials from basaltic resources.
+Testing robotic systems designed to collect and transport lunar soil.
+The most important application is developing technologies that could allow astronauts to obtain oxygen and useful construction materials directly from lunar resources.` },
+        { name: "Darhad Depression", lat: 51.10, lon: 99.30, info: "Driest desert", category: "terrain", details:`Similarity to Mars: Environmental and geological similarity to Martian regions containing subsurface water ice and frozen ground.
+
+Description of the region:
+The Darhad Depression is a cold continental basin located in northern Mongolia. The region experiences very low winter temperatures and contains seasonally frozen ground, with permafrost occurring in the wider area. Its geological conditions allow ice to accumulate and remain preserved within sediments. The region is particularly interesting for investigating the distribution, stability and detection of underground ice.
+
+Corresponding conditions on Mars:
+Water ice occurs under the Martian surface in several regions, particularly at higher latitudes. In some areas, ice is mixed with soil and rocky material, creating ice-rich regolith. This water could become an important resource for future human missions, providing drinking water, supporting agriculture and potentially supplying oxygen and hydrogen through electrolysis.
+
+Comparison – similarities and differences:
+Both environments can contain water ice preserved beneath the surface, making them important for research into subsurface water detection. They also provide opportunities to investigate how ice interacts with surrounding geological materials. However, terrestrial permafrost exists in the presence of Earth's atmosphere, biological activity and different pressure conditions. Martian subsurface ice is exposed to a different radiation environment and much lower atmospheric pressure. Therefore, Mongolia is useful for studying ice detection and geological properties, but it does not fully reproduce Martian conditions.
+
+Potential applications for Mars exploration and permanent bases:
+Testing ground-penetrating radar systems for detecting underground ice.
+Investigating electrical resistivity methods for identifying frozen materials.
+Testing remote sensing techniques for mapping subsurface water resources.
+Monitoring the stability and distribution of underground ice.
+Evaluating technologies for extracting water from frozen geological materials.
+Developing methods for identifying suitable locations for future settlements.` }
     ],
     "mars": [
         { name: "Olympus Mons", lat: 18.65, lon: 226.2, info: "Largest volcano in the Solar System", category: "volcanoes" },
