@@ -676,6 +676,20 @@ function closeDetailsModal() {
     document.getElementById('details-modal').style.display = 'none';
 }
 
+// Zamknij okno po kliknięciu poza nim (w ciemne tło)
+document.getElementById('details-modal').addEventListener('click', (event) => {
+    if (event.target.id === 'details-modal') {
+        closeDetailsModal();
+    }
+});
+
+// (opcjonalnie) zamknij też klawiszem Esc
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+        closeDetailsModal();
+    }
+});
+
 // --- ANIMATION & RESIZE ---
 function animate() {
     requestAnimationFrame(animate);
