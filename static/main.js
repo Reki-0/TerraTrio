@@ -548,6 +548,7 @@ const OVERLAY_OFFSET_X = -11.5/360;
 const OVERLAY_FILES = {
     'Terrain Type::Desert': 'terrain_desert.png',
     'Soil::Basaltic Mars': 'soil_basaltic.png',
+    'Ice::Polygon Terrain': 'ice.png',
 };
 const overlayLayers = {};
 
