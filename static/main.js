@@ -365,7 +365,7 @@ function addNewPoint() {
         return;
     }
 
-    let celestialBody = "Earth Analogue";
+    let celestialBody = "Moon Analogue";
     if (currentPlanet === "mars") celestialBody = "Mars Analogue";
     if (currentPlanet === "moon") celestialBody = "Moon Analogue";
 
