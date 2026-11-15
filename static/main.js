@@ -324,7 +324,7 @@ window.addEventListener('dblclick', (event) => {
         const pointName = prompt(`Enter name for location (Lat: ${coords.lat}, Lon: ${coords.lon}):`, "My Point");
         if (!pointName) return;
 
-        let celestialBody = "Earth Analogue";
+        let celestialBody = "Moon Analogue";
         if (currentPlanet === "mars") celestialBody = "Mars Analogue";
         if (currentPlanet === "moon") celestialBody = "Moon Analogue";
 
