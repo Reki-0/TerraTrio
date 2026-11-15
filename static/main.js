@@ -611,7 +611,7 @@ function closeInfoCard() {
     selectedPoint = null;
 }
 
-function openDetailsModal() {
+      function openDetailsModal() {
     if (!selectedPoint) return;
     document.getElementById('modal-title').textContent = `Details for: ${selectedPoint.name}`;
     document.getElementById('modal-desc').innerHTML = `
@@ -621,6 +621,7 @@ function openDetailsModal() {
     `;
     document.getElementById('details-modal').style.display = 'flex';
 }
+
 function closeDetailsModal() {
     document.getElementById('details-modal').style.display = 'none';
 }
