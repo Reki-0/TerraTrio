@@ -496,12 +496,12 @@ button:hover {
     display: flex;
     align-items: center;
     gap: 6px;
-    color: #b0c4de;
+    color: #ffffff;
     font-size: 13px;
     text-decoration: none;
     transition: color 0.2s;
 }
 
 #github-link:hover {
-    color: #00ffff;
+    color: ##FF5722;
 }
