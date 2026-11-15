@@ -2,10 +2,21 @@
 const LOCATIONS = {
     "earth": [
         { name: "Tellnes Ilmenite Deposit", lat: 58.20, lon: 6.25, info: "y", category: "y",
-  details: `Tu wpisz długi opis.
-
-Drugi akapit opisu...
-Trzeci akapit...`  },
+  details: `1. Name: Tellnes Ilmenite Deposit, Sokndal, Rogaland, Norway.
+   Similarity to the Moon: Mineralogical similarity to lunar regolith, the presence of ilmenite.
+   Description of the region:
+Tellnes is a large geological deposit located in southwestern Norway. It consists of ilmenite-rich norite, a rock containing substantial amounts of ilmenite, plagioclase and pyroxene. The deposit is valuable because of its high concentration of titanium-bearing minerals. Its mineral composition makes it suitable for investigating technologies used to separate and process oxygen-bearing minerals.
+   Corresponding conditions on the Moon:
+Lunar regolith contains ilmenite, particularly in some basaltic lunar regions. This mineral is important for future lunar resource utilisation because it contains oxygen chemically bound to iron and titanium. It may also provide titanium for industrial applications. Extracting these resources could reduce the need to transport oxygen and raw materials from Earth.
+   Comparison – similarities and differences:
+Both locations contain ilmenite and other minerals associated with basaltic geological materials. This makes Tellnes particularly relevant for investigating mineral processing and oxygen extraction technologies. However, Tellnes is a concentrated geological ore deposit, whereas lunar regolith is a heterogeneous mixture of minerals, impact fragments and extremely fine particles. Lunar ilmenite concentrations also vary significantly depending on the geological region.
+   Potential applications for permanent lunar bases:
+Testing mineral separation and concentration systems.
+Investigating oxygen extraction from ilmenite.
+Testing technologies for recovering titanium and iron.
+Evaluating the efficiency of processing lunar mineral resources.
+Developing systems for producing useful materials from local geological deposits.
+The most important application is the development of technologies that could produce oxygen directly from lunar regolith. Oxygen would be needed for astronaut life support and could also contribute to producing rocket propellant when combined with hydrogen.`  },
         { name: "Rajmahal Traps", lat: 24.15, lon: 87.30, info: "Volcano in Hawaii", category: "volcanoes" },
         { name: "Darhad Depression", lat: 51.10, lon: 99.30, info: "Driest desert", category: "terrain" }
     ],
