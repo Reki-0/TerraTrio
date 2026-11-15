@@ -485,3 +485,5 @@ button:hover {
     color: #000000 !important;
     border: 2px solid #000000 !important;
 }
+#details-modal .modal-content { max-height: 85vh; overflow-y: auto; }
+.details-text { font-style: italic; line-height: 1.5; }
