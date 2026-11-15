@@ -24,7 +24,7 @@ document.getElementById('canvas-container').appendChild(renderer.domElement);
 
 // Mouse controls with zoom limits
 const controls = new THREE.OrbitControls(camera, renderer.domElement);
-controls.minDistance = 1.5;
+controls.minDistance = 1.7;
 controls.maxDistance = 10;
 camera.position.z = 3;
 controls.enablePan = false; 
