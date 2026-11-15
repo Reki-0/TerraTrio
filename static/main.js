@@ -181,7 +181,7 @@ function writeStorage(key, value) {
 function bodyLabel(planetName) {
     if (planetName === 'mars') return 'Mars Analogue';
     if (planetName === 'moon') return 'Moon Analogue';
-    return 'Earth Analogue';
+    return 'Moon Analogue';
 }
 
 function addPointFromData(d) {
